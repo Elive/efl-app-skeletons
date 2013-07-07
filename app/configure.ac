@@ -1,9 +1,26 @@
 dnl Process this file with autoconf to produce a configure script.
 
+##--##--##--##--##--##--##--##--##--##--##--##--##--##--##--##--##
+m4_define([v_maj], [0])
+m4_define([v_min], [0])
+m4_define([v_mic], [1])
+m4_define([v_rev], m4_esyscmd(git log -1 --format="%h" | tr -d '\n'))
+##--   When released, remove the dnl on the below line
+dnl m4_undefine([v_rev])
+##--   When doing snapshots / change soname. remove dnl on below line
+dnl m4_define([relname], [ver-pre-git-01])
+dnl m4_define([v_rel], [-release relname])
+##--##--##--##--##--##--##--##--##--##--##--##--##--##--##--##--##
+m4_ifdef([v_rev], [m4_define([v_ver], [v_maj.v_min.v_mic.v_rev])], [m4_define([v_ver], [v_maj.v_min.v_mic])])
+m4_define([lt_cur], m4_eval(v_maj + v_min))
+m4_define([lt_rev], v_mic)
+m4_define([lt_age], v_min)
+##--##--##--##--##--##--##--##--##--##--##--##--##--##--##--##--##
+
 # get rid of that stupid cache mechanism
 rm -f config.cache
 
-AC_INIT([elm_skel], [0.0.1], [jeremy@asynk.ch])
+AC_INIT([elm_skel], [v_ver], [jeremy@asynk.ch])
 AC_PREREQ([2.65])
 AC_CONFIG_SRCDIR([configure.ac])
 AC_CONFIG_MACRO_DIR([m4])
@@ -23,6 +40,20 @@ m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 # this will speed up libtool checks
 LT_PREREQ([2.2])
 LT_INIT([win32-dll])
+
+# Version Release info
+m4_ifdef([v_rev], , [m4_define([v_rev], [0])])
+m4_ifdef([v_rel], , [m4_define([v_rel], [])])
+AC_DEFINE_UNQUOTED(VMAJ, [v_maj], [Major version])
+AC_DEFINE_UNQUOTED(VMIN, [v_min], [Minor version])
+AC_DEFINE_UNQUOTED(VMIC, [v_mic], [Micro version])
+AC_DEFINE_UNQUOTED(VREV, [v_rev], [Revison])
+version_info="lt_cur:lt_rev:lt_age"
+release_info="v_rel"
+AC_SUBST(version_info)
+AC_SUBST(release_info)
+VMAJ=v_maj
+AC_SUBST(VMAJ)
 
 ### Default options with respect to host
 
@@ -109,6 +140,7 @@ AC_SUBST(lt_enable_auto_import)
 AC_OUTPUT([
    Makefile
    src/Makefile
+   src/lib/Makefile
    src/bin/Makefile
 ])
 

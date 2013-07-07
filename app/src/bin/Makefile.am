@@ -1,11 +1,12 @@
 MAINTAINERCLEANFILES = Makefile.in
 
 AM_CPPFLAGS = \
+   -I$(top_srcdir)/src/lib \
    -DPACKAGE_BIN_DIR=\"$(bindir)\" \
    -DPACKAGE_LIB_DIR=\"$(libdir)\" \
    -DPACKAGE_DATA_DIR=\"$(pkgdatadir)\"
 
-common_ldadd =  @ELEMENTARY_LIBS@ @EVIL_LIBS@
+common_ldadd =  @ELEMENTARY_LIBS@ @EVIL_LIBS@ $(top_builddir)/src/lib/libelm_skel.la
 common_cflags =  @ELM_SKEL_CFLAGS@ @ELEMENTARY_CFLAGS@ @EVIL_CFLAGS@
 common_ldflags =  @ELM_SKEL_LDFLAGS@
 
