@@ -1,0 +1,12 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@
+vmaj=@VMAJ@
+
+Name: elm-skel
+Description: This is a source tree skeleton for any elementary based project.
+@pkgconfig_requires_private@: @requirement_elm_skel@
+Version: @VERSION@
+Libs: -L${libdir} -lelm_skel
+Cflags: -I${includedir}/elm_skel_app-@VMAJ@

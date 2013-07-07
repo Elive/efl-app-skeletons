@@ -33,3 +33,5 @@ EXTRA_DIST = \
    autogen.sh \
    elm_skel.pc.in
 
+pkgconfigdir = $(libdir)/pkgconfig
+pkgconfig_DATA = elm-skel.pc

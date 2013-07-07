@@ -138,6 +138,7 @@ AC_SUBST(lt_enable_auto_import)
 ### Output
 
 AC_OUTPUT([
+   elm-skel.pc
    Makefile
    src/Makefile
    src/lib/Makefile

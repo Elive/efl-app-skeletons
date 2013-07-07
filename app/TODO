@@ -1,7 +1,7 @@
 - quicklaunch
 - library
 + lcov
-+ elm_skel.pc.in
+- elm_skel.pc.in
 + data/themes
 + data/desktop
 + data/fonts
