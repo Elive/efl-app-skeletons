@@ -1,0 +1,10 @@
++ quicklaunch
++ library
++ lcov
++ elm_skel.pc.in
++ data/themes
++ data/desktop
++ data/fonts
++ data/icons
++ data/images
++ elm_skel.spec.in

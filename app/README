@@ -1,0 +1,36 @@
+elm_skel 0.0.1
+
+******************************************************************************
+
+ FOR ANY ISSUES PLEASE EMAIL:
+ enlightenment-devel@lists.sourceforge.net
+
+******************************************************************************
+
+Requirements:
+-------------
+
+Must:
+  libc
+  efl 1.7
+  elementary 1.7
+
+------------------------------------------------------------------------------
+
+COMPILING AND INSTALLING:
+
+  $ ./configure
+  $ make
+(as root unless you are installing in your users directories):
+  $ make install
+
+----
+
+DOCS
+
+To generate documentation, doxygen is required.
+
+  $ make doc
+
+will create a etrophy/doc/html directory.
+You could start looking at index.html.
