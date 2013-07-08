@@ -6,8 +6,7 @@ AM_CPPFLAGS = -I. \
    -DPACKAGE_BIN_DIR=\"$(bindir)\" \
    -DPACKAGE_LIB_DIR=\"$(libdir)\" \
    -DPACKAGE_DATA_DIR=\"$(datadir)/$(PACKAGE)\" \
-   @ELEMENTARY_CFLAGS@ \
-   @EVIL_CFLAGS@
+   @ELM_SKEL_CFLAGS@
 
 includes_HEADERS = elm_skel.h
 includesdir = $(includedir)/elm_skel-@VMAJ@
@@ -17,7 +16,7 @@ lib_LTLIBRARIES = libelm_skel.la
 libelm_skel_la_SOURCES = \
    elm_skel.c
 
-libelm_skel_la_LIBADD = @ELEMENTARY_LIBS@ @EVIL_LIBS@
+libelm_skel_la_LIBADD = @ELM_SKEL_LIBS@
 libelm_skel_la_CFLAGS =
 libelm_skel_la_LDFLAGS = @PROJECT_LTLIBRARY_FLAGS@
 

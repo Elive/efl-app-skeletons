@@ -31,9 +31,6 @@ PROJECT_INIT
 AC_CANONICAL_BUILD
 AC_CANONICAL_HOST
 
-EFL_CHECK_COMPILER_FLAGS([ELM_SKEL], [-Wall -Wunused -Wextra -Wpointer-arith -Wno-missing-field-initializers -fvisibility=hidden -fdata-sections -ffunction-sections])
-EFL_CHECK_LINKER_FLAGS([ELM_SKEL], [-fvisibility=hidden -fdata-sections -ffunction-sections -Wl,--gc-sections -fno-strict-aliasing -Wl,--as-needed -Wl,--no-copy-dt-needed-entries])
-
 ### Additional options to configure
 
 ### Checks for programs
@@ -73,7 +70,7 @@ AC_SUBST(ELM_SKEL_BUILD)
 # Dependencies for the library
 
 requirement_elm_skel="elementary >= 1.7.0 evas >= 1.7.0 ecore-file >= 1.7.0 ecore >= 1.7.0 eet >= 1.7.0 eina >= 1.7.0 ${requirement_elm_skel}"
-PKG_CHECK_MODULES([ELEMENTARY], [ $requirement_elm_skel ])
+PKG_CHECK_MODULES([ELM_SKEL], [ $requirement_elm_skel ])
 
 AC_SUBST(requirement_elm_skel)
 
@@ -103,6 +100,9 @@ case "$host_os" in
       ELM_SKEL_CFLAGS="${ELM_SKEL_CFLAGS} -D_WIN32_WCE=0x0420"
       ;;
 esac
+
+EFL_CHECK_COMPILER_FLAGS([ELM_SKEL], [-Wall -Wunused -Wextra -Wpointer-arith -Wno-missing-field-initializers -fvisibility=hidden -fdata-sections -ffunction-sections])
+EFL_CHECK_LINKER_FLAGS([ELM_SKEL], [-fvisibility=hidden -fdata-sections -ffunction-sections -Wl,--gc-sections -fno-strict-aliasing -Wl,--as-needed -Wl,--no-copy-dt-needed-entries])
 
 # CPU architecture specific assembly
 
