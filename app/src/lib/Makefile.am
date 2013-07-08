@@ -19,5 +19,5 @@ libelm_skel_la_SOURCES = \
 
 libelm_skel_la_LIBADD = @ELEMENTARY_LIBS@ @EVIL_LIBS@
 libelm_skel_la_CFLAGS =
-libelm_skel_la_LDFLAGS = -no-undefined @lt_enable_auto_import@ -version-info @version_info@ @release_info@
+libelm_skel_la_LDFLAGS = @PROJECT_LTLIBRARY_FLAGS@
 

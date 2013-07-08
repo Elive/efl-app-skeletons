@@ -30,4 +30,4 @@ elm_skel_qldir = $(libdir)
 elm_skel_ql_la_SOURCES = $(elm_skel_SOURCES)
 elm_skel_ql_la_LIBADD = ${common_ldadd}
 elm_skel_ql_la_CFLAGS = ${common_cflags}
-elm_skel_ql_la_LDFLAGS = -module -avoid-version -no-undefined
+elm_skel_ql_la_LDFLAGS = -module @PROJECT_LTMODULE_FLAGS@
