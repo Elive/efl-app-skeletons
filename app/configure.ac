@@ -34,6 +34,8 @@ AC_CANONICAL_HOST
 EFL_CHECK_COMPILER_FLAGS([ELM_SKEL], [-Wall -Wunused -Wextra -Wpointer-arith -Wno-missing-field-initializers -fvisibility=hidden -fdata-sections -ffunction-sections])
 EFL_CHECK_LINKER_FLAGS([ELM_SKEL], [-fvisibility=hidden -fdata-sections -ffunction-sections -Wl,--gc-sections -fno-strict-aliasing -Wl,--as-needed -Wl,--no-copy-dt-needed-entries])
 
+### Additional options to configure
+
 ### Checks for programs
 
 AC_PROG_CC
@@ -52,6 +54,8 @@ fi
 AC_SUBST(pkgconfig_requires_private)
 
 ### Checks for libraries
+
+# Checks for library functions.
 
 # Evil library for compilation on Windows
 
@@ -81,6 +85,10 @@ AM_GNU_GETTEXT_VERSION([0.18])
 
 EFL_CHECK_PATH_MAX
 
+### Checks for types
+
+### Checks for structures
+
 ### Checks for compiler characteristics
 
 AM_PROG_CC_C_O
@@ -95,6 +103,8 @@ case "$host_os" in
       ELM_SKEL_CFLAGS="${ELM_SKEL_CFLAGS} -D_WIN32_WCE=0x0420"
       ;;
 esac
+
+# CPU architecture specific assembly
 
 ### Checks for linker characteristics
 
