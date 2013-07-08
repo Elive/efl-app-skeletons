@@ -1,7 +1,7 @@
 - quicklaunch
 - library
 - elm_skel.pc.in
-+ build profile
+- build profile
 + tests
 + lcov
 + eina_log_level

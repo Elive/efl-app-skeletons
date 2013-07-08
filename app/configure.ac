@@ -33,6 +33,23 @@ AC_CANONICAL_HOST
 
 ### Additional options to configure
 
+# Build profile
+
+AC_ARG_WITH([profile],
+   [AC_HELP_STRING([--with-profile=PROFILE],
+                   [use the predefined build profile, one of: dev, debug and release.
+                    @<:@default=dev@:>@])],
+   [build_profile=${withval}],
+   [build_profile=def_build_profile])
+
+case "${build_profile}" in
+   dev|debug|release)
+     ;;
+   *)
+     AC_MSG_ERROR([Unknown build profile --with-profile=${build_profile}])
+     ;;
+esac
+
 ### Checks for programs
 
 AC_PROG_CC
@@ -104,6 +121,26 @@ esac
 EFL_CHECK_COMPILER_FLAGS([ELM_SKEL], [-Wall -Wunused -Wextra -Wpointer-arith -Wno-missing-field-initializers -fvisibility=hidden -fdata-sections -ffunction-sections])
 EFL_CHECK_LINKER_FLAGS([ELM_SKEL], [-fvisibility=hidden -fdata-sections -ffunction-sections -Wl,--gc-sections -fno-strict-aliasing -Wl,--as-needed -Wl,--no-copy-dt-needed-entries])
 
+case "${build_profile}" in
+   dev)
+     dnl Check if compiler has a dodgy -Wshadow that emits errors when shadowing a global
+     AC_MSG_CHECKING([whether -Wshadow generates spurious warnings])
+     CFLAGS_save="${CFLAGS}"
+     CFLAGS="${CFLAGS} -Werror -Wshadow"
+     AC_TRY_COMPILE([int x;], [int x = 0; (void)x;],
+       [AC_MSG_RESULT([no])
+        EFL_CHECK_COMPILER_FLAGS([EFL], [-Wshadow])],
+       [AC_MSG_RESULT([yes])])
+     CFLAGS="${CFLAGS_save}"
+     ;;
+
+   debug)
+     ;;
+
+   release)
+     ;;
+esac
+
 # CPU architecture specific assembly
 
 ### Checks for linker characteristics
@@ -145,4 +182,6 @@ echo "  LDFLAGS..................: $LDFLAGS"
 echo
 echo "Installation...............: make install (as root if needed, with 'su' or 'sudo')"
 echo "  prefix...................: $prefix"
+echo
+echo "Configuration...: ${COLOR_OTHER}profile=${build_profile} os=${host_os}${COLOR_RESET}"
 echo
