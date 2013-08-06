@@ -2,8 +2,8 @@
 - library
 - elm_skel.pc.in
 - build profile
-+ tests
-+ lcov
+- tests
+- lcov
 + eina_log_level
 + ecore_getpot
 + data/themes
