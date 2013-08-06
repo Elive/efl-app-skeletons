@@ -1,4 +1,6 @@
 ACLOCAL_AMFLAGS = -I m4
+AM_MAKEFLAGS = --no-print-directory
+AM_DISTCHECK_CONFIGURE_FLAGS = 
 
 SUBDIRS = src
 
@@ -8,7 +10,8 @@ MAINTAINERCLEANFILES = \
    $(PACKAGE_TARNAME)-$(PACKAGE_VERSION).tar.bz2 \
    aclocal.m4 \
    config.guess \
-   elm_skel_config.h.in \
+   config.cache-env \
+   config.h.in \
    config.sub \
    configure \
    compile \
@@ -31,7 +34,11 @@ EXTRA_DIST = \
    AUTHORS \
    COPYING \
    autogen.sh \
-   elm_skel.pc.in
+   elm-skel.pc.in \
+   efl_attribute.m4 \
+   efl_compiler.m4 \
+   efl_path_max.m4 \
+   project_init.m4
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = elm-skel.pc
