@@ -53,16 +53,26 @@ esac
 # Tests
 
 AC_ARG_WITH([tests],
-   [AC_HELP_STRING([--with-tests=none|regular],
-                   [choose testing method: regular or none.
+   [AC_HELP_STRING([--with-tests=none|regular|coverage],
+                   [choose testing method: regular, coverage or none.
                     @<:@default=none@:>@])],
    [build_tests=${withval}],
-   [build_tests=none])
+   [build_tests=auto])
 
+want_coverage="no"
 want_tests="no"
 case "${build_tests}" in
+   auto)
+     if test "${build_profile}" = "dev"; then
+        want_tests="yes"
+     fi
+     ;;
    regular)
      want_tests="yes"
+     ;;
+   coverage)
+     want_tests="yes"
+     want_coverage="yes"
      ;;
    none)
      ;;
@@ -87,6 +97,27 @@ else
    pkgconfig_requires_private="Requires"
 fi
 AC_SUBST(pkgconfig_requires_private)
+
+# lcov
+
+if test "${want_coverage}" = "yes" ; then
+   AC_CHECK_PROG([have_lcov], [lcov], [yes], [no])
+   if test "x${have_lcov}" = "xyes" ; then
+      ELM_SKEL_COV_CFLAGS="${ELM_SKEL_COV_CFLAGS} -fprofile-arcs -ftest-coverage"
+      ELM_SKEL_COV_LIBS="${ELM_SKEL_COV_LIBS} -lgcov"
+      if test "x${prefer_assert}" = "xno"; then
+         ELM_SKEL_COV_CFLAGS="${ELM_SKEL_COV_CFLAGS} -DNDEBUG"
+      else
+         ELM_SKEL_COV_CFLAGS="${ELM_SKEL_COV_CFLAGS} -g -O0 -DDEBUG"
+      fi
+   else
+      AC_MSG_ERROR([lcov is not found])
+   fi
+fi
+
+AC_SUBST(ELM_SKEL_COV_LIBS)
+AC_SUBST(ELM_SKEL_COV_CFLAGS)
+AM_CONDITIONAL([ELM_SKEL_ENABLE_COVERAGE], [test "${want_coverage}" = "yes"])
 
 ### Checks for libraries
 
@@ -211,9 +242,13 @@ echo "  prefix...................: $prefix"
 echo
 echo "Configuration...: ${COLOR_OTHER}profile=${build_profile} os=${host_os}${COLOR_RESET}"
 echo
-if test "${build_tests}" = "none"; then
-echo "Tests...........: no"
-elif test "${build_tests}" = "regular"; then
+if test "${want_coverage}" = "yes"; then
+echo "Tests...........: make lcov-check"
+else
+if test "${want_tests}" = "yes"; then
 echo "Tests...........: make check"
+else
+echo "Tests...........: no"
+fi
 fi
 echo
