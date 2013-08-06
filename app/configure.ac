@@ -50,6 +50,27 @@ case "${build_profile}" in
      ;;
 esac
 
+# Tests
+
+AC_ARG_WITH([tests],
+   [AC_HELP_STRING([--with-tests=none|regular],
+                   [choose testing method: regular or none.
+                    @<:@default=none@:>@])],
+   [build_tests=${withval}],
+   [build_tests=none])
+
+want_tests="no"
+case "${build_tests}" in
+   regular)
+     want_tests="yes"
+     ;;
+   none)
+     ;;
+   *)
+     AC_MSG_ERROR([Unknown build tests option: --with-tests=${build_tests}])
+     ;;
+esac
+
 ### Checks for programs
 
 AC_PROG_CC
@@ -68,6 +89,13 @@ fi
 AC_SUBST(pkgconfig_requires_private)
 
 ### Checks for libraries
+
+# check unit testing library
+
+if test "${want_tests}" = "yes"; then
+   PKG_CHECK_MODULES([CHECK], [check >= 0.9.5])
+fi
+AM_CONDITIONAL([ELM_SKEL_ENABLE_TESTS], [test "${want_tests}" = "yes"])
 
 # Checks for library functions.
 
@@ -182,4 +210,10 @@ echo "Installation...............: make install (as root if needed, with 'su' or
 echo "  prefix...................: $prefix"
 echo
 echo "Configuration...: ${COLOR_OTHER}profile=${build_profile} os=${host_os}${COLOR_RESET}"
+echo
+if test "${build_tests}" = "none"; then
+echo "Tests...........: no"
+elif test "${build_tests}" = "regular"; then
+echo "Tests...........: make check"
+fi
 echo

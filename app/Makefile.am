@@ -1,6 +1,7 @@
 ACLOCAL_AMFLAGS = -I m4
 AM_MAKEFLAGS = --no-print-directory
-AM_DISTCHECK_CONFIGURE_FLAGS = 
+AM_DISTCHECK_CONFIGURE_FLAGS = \
+   --with-tests=regular
 
 SUBDIRS = src
 
@@ -42,3 +43,11 @@ EXTRA_DIST = \
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = elm-skel.pc
+
+
+# Unit tests
+
+if ELM_SKEL_ENABLE_TESTS
+lcov-check:
+	@$(MAKE) $(AM_MAKEFLAGS) check
+endif

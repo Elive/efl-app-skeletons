@@ -11,3 +11,23 @@ lib_libelm_skel_la_SOURCES = \
 lib_libelm_skel_la_LIBADD = @ELM_SKEL_LIBS@
 lib_libelm_skel_la_CFLAGS =
 lib_libelm_skel_la_LDFLAGS = @PROJECT_LTLIBRARY_FLAGS@
+
+### Unit tests
+
+if ELM_SKEL_ENABLE_TESTS
+
+TESTS += tests/elm_skel_suite
+check_PROGRAMS += tests/elm_skel_suite
+
+tests_elm_skel_suite_SOURCES = \
+   tests/elm_skel_suite.c
+
+tests_elm_skel_suite_CPPFLAGS = \
+   -I$(top_srcdir)/src/lib \
+   @CHECK_CFLAGS@ \
+   @ELM_SKEL_CFLAGS@
+
+tests_elm_skel_suite_LDADD = @CHECK_LIBS@ lib/libelm_skel.la
+tests_elm_skel_suite_DEPENDENCIES = 
+
+endif
