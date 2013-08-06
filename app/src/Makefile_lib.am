@@ -1,0 +1,13 @@
+### Libraries
+
+includes_HEADERS = lib/elm_skel.h
+includesdir = $(includedir)/elm_skel-@VMAJ@
+
+lib_LTLIBRARIES += lib/libelm_skel.la
+
+lib_libelm_skel_la_SOURCES = \
+   lib/elm_skel.c
+
+lib_libelm_skel_la_LIBADD = @ELM_SKEL_LIBS@
+lib_libelm_skel_la_CFLAGS =
+lib_libelm_skel_la_LDFLAGS = @PROJECT_LTLIBRARY_FLAGS@

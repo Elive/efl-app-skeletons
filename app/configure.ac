@@ -159,8 +159,6 @@ AC_OUTPUT([
    elm-skel.pc
    Makefile
    src/Makefile
-   src/lib/Makefile
-   src/bin/Makefile
 ])
 
 AC_OUTPUT
