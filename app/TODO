@@ -4,8 +4,8 @@
 - build profile
 - tests
 - lcov
-+ eina_log_level
-+ ecore_getpot
+- eina_log_level
+- ecore_getpot
 + data/themes
 + data/desktop
 + data/fonts
