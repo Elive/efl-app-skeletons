@@ -7,7 +7,7 @@
 
 START_TEST (test_elm_skel_lib)
 {
-    ck_assert(strcmp(elm_skel_hello(), "Hello") == 0);
+    ck_assert(strcmp(elm_skel_hello(), "Hello from the EFL world") == 0);
 }
 END_TEST
 
@@ -29,7 +29,7 @@ main(int argc EINA_UNUSED, char *argv[] EINA_UNUSED)
     int number_failed;
     Suite *s = elm_skel_suite();
     SRunner *sr = srunner_create(s);
-    srunner_run_all(sr, CK_NORMAL);
+    srunner_run_all(sr, CK_ENV);
     number_failed = srunner_ntests_failed(sr);
     srunner_free(sr);
     return (number_failed == 0) ? EXIT_SUCCESS : EXIT_FAILURE;

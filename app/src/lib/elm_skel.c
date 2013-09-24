@@ -7,5 +7,5 @@
 EAPI const char*
 elm_skel_hello()
 {
-   return "Hello";
+   return "Hello from the EFL world";
 }
