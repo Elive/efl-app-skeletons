@@ -85,6 +85,12 @@ esac
 
 AC_PROG_CC
 
+# Check edje_cc
+EFL_WITH_BIN([edje], [edje-cc], [edje_cc])
+if test "x${edje_cc}" = "x" ; then
+   AC_MSG_ERROR([Unable to find edje_cc binary.])
+fi
+
 # pkg-config
 
 PKG_PROG_PKG_CONFIG
@@ -239,6 +245,7 @@ echo "  LDFLAGS..................: $LDFLAGS"
 echo
 echo "Installation...............: make install (as root if needed, with 'su' or 'sudo')"
 echo "  prefix...................: $prefix"
+echo "  edje_cc..................: ${edje_cc}"
 echo
 echo "Configuration...: ${COLOR_OTHER}profile=${build_profile} os=${host_os}${COLOR_RESET}"
 echo

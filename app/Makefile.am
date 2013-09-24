@@ -39,6 +39,7 @@ EXTRA_DIST = \
    m4/efl_attribute.m4 \
    m4/efl_compiler.m4 \
    m4/efl_path_max.m4 \
+   m4/efl_binary.m4 \
    m4/project_init.m4
 
 pkgconfigdir = $(libdir)/pkgconfig
