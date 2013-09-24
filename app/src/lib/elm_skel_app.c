@@ -12,8 +12,8 @@ static Eina_Bool sigint_handler(void *data EINA_UNUSED,
 
 static void
 on_del(void *data EINA_UNUSED,
-         Evas_Object *obj EINA_UNUSED,
-         void *event_info EINA_UNUSED)
+       Evas_Object *obj EINA_UNUSED,
+       void *event_info EINA_UNUSED)
 {
    EINA_LOG_INFO("delete,request");
    elm_exit();
