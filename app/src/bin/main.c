@@ -3,6 +3,7 @@
 #endif /* HAVE_CONFIG_H */
 
 #include "elm_skel.h"
+#include "elm_skel_app.h"
 #include <Ecore_Getopt.h>
 
 #undef EINA_LOG_DOMAIN_DEFAULT
@@ -44,13 +45,14 @@ static const Ecore_Getopt options =
 EAPI_MAIN int
 elm_main(int argc, char *argv[])
 {
+    Evas_Object *app;
 
     Eina_Bool exit = EINA_FALSE;
     int args;
     char *engine = NULL;
     int verbosity = 0;
     Eina_Bool fullscreen = EINA_FALSE;
-    Eina_Rectangle geometry = {-1, -1, -1, -1};
+    Eina_Rectangle geometry = {600, 300, 200, 50};
     int eina_log_level = EINA_LOG_LEVEL_WARN;
 
     Ecore_Getopt_Value values[] =
@@ -98,7 +100,21 @@ elm_main(int argc, char *argv[])
             elm_app_bin_dir_get(),
             elm_app_lib_dir_get(),
             elm_app_data_dir_get());
-    EINA_LOG_ERR("says: %s", elm_skel_hello());
+
+    app = elm_skel_app();
+
+    // set position and size according to parameters
+    evas_object_show(app);
+    if(fullscreen) {
+        elm_win_fullscreen_set(app, EINA_TRUE);
+    }
+    else {
+        evas_object_resize(app, geometry.w, geometry.h);
+        evas_object_move(app, geometry.x, geometry.y);
+    }
+
+    elm_run();
+    elm_shutdown();
 
     return EXIT_SUCCESS;
 }
