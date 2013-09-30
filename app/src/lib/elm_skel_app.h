@@ -5,6 +5,6 @@
 #include <config.h>
 
 EAPI Evas_Object*
-elm_skel_app();
+elm_skel_app(Eina_Bool fullscreen, Eina_Rectangle geometry, const char* theme);
 
 #endif   /* ELM_SKEL_APP_H */

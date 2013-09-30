@@ -38,17 +38,19 @@ static const Ecore_Getopt options =
                          "increase log verbosity"),
       ECORE_GETOPT_STORE_STR('e', "engine",
                              "ecore-evas engine to use"),
+      ECORE_GETOPT_STORE_STR('t', "theme",
+                             "edje theme application to use"),
       ECORE_GETOPT_SENTINEL
    }
 };
 
+
 EAPI_MAIN int
 elm_main(int argc, char *argv[])
 {
-   Evas_Object *app;
-
    Eina_Bool exit = EINA_FALSE;
    int args;
+   char *theme = NULL;
    char *engine = NULL;
    int verbosity = 0;
    Eina_Bool fullscreen = EINA_FALSE;
@@ -66,6 +68,7 @@ elm_main(int argc, char *argv[])
         ECORE_GETOPT_VALUE_PTR_CAST(geometry),
         ECORE_GETOPT_VALUE_INT(verbosity),
         ECORE_GETOPT_VALUE_STR(engine),
+        ECORE_GETOPT_VALUE_STR(theme),
         ECORE_GETOPT_VALUE_NONE
      };
 
@@ -73,7 +76,7 @@ elm_main(int argc, char *argv[])
    elm_app_compile_bin_dir_set(PACKAGE_BIN_DIR);
    elm_app_compile_lib_dir_set(PACKAGE_LIB_DIR);
    elm_app_compile_data_dir_set(PACKAGE_DATA_DIR);
-   elm_app_info_set(elm_main, "elm_skel", NULL);
+   elm_app_info_set(elm_main, "elm_skel", "themes/default.edje");
 
    args = ecore_getopt_parse(&options, values, argc, argv);
 
@@ -101,17 +104,7 @@ elm_main(int argc, char *argv[])
                 elm_app_lib_dir_get(),
                 elm_app_data_dir_get());
 
-   app = elm_skel_app();
-
-   // set position and size according to parameters
-   evas_object_show(app);
-   if(fullscreen) {
-        elm_win_fullscreen_set(app, EINA_TRUE);
-   }
-   else {
-        evas_object_resize(app, geometry.w, geometry.h);
-        evas_object_move(app, geometry.x, geometry.y);
-   }
+   elm_skel_app(fullscreen, geometry, theme);
 
    elm_run();
    elm_shutdown();
