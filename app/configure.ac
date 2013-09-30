@@ -224,6 +224,9 @@ AC_OUTPUT([
    elm-skel.pc
    Makefile
    src/Makefile
+   data/Makefile
+   data/images/Makefile
+   data/themes//Makefile
 ])
 
 AC_OUTPUT

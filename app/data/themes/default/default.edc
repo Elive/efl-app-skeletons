@@ -1,0 +1,95 @@
+collections {
+   images {
+      image: "tunnel.png" COMP;
+      image: "frame.png" COMP;
+      image: "left_door.png" COMP;
+      image: "right_door.png" COMP;
+   }
+   group { name: "layout";
+      data {
+         item: "title" "Elm Layout";
+      }
+      parts {
+         part { name: "tunnel";
+            type: IMAGE;
+            description { state: "default" 0.0;
+               rel1.relative: 0.0 0.0;
+               rel2.relative: 1.0 1.0;
+               image.normal: "tunnel.png";
+               aspect: 1 1;
+               aspect_preference: BOTH;
+            }
+         }
+         part { name: "left_door";
+            type: IMAGE;
+            clip_to: "clip_rect";
+            description { state: "default" 0.0;
+               rel1.relative: 0.0 0.0;
+               rel2.relative: 1.0 1.0;
+               image.normal: "left_door.png";
+               aspect: 1 1;
+               aspect_preference: BOTH;
+            }
+            description { state: "open" 0.0;
+               inherit: "default" 0.0;
+               rel1.relative: -1.0 0.0;
+               rel2.relative: 0.0 1.0;
+            }
+         }
+         part { name: "right_door";
+            type: IMAGE;
+            clip_to: "clip_rect";
+            description { state: "default" 0.0;
+               rel1.relative: 0.0 0.0;
+               rel2.relative: 1.0 1.0;
+               image.normal: "right_door.png";
+               aspect: 1 1;
+               aspect_preference: BOTH;
+            }
+            description { state: "open" 0.0;
+               inherit: "default" 0.0;
+               rel1.relative: 1.0 0.0;
+               rel2.relative: 2.0 1.0;
+            }
+         }
+         part { name: "clip_rect";
+            type: RECT;
+            description { state: "default" 0.0;
+               rel1.relative: 0.0 0.0;
+               rel1.to: "frame";
+               rel2.relative: 1.0 1.0;
+               rel2.to: "frame";
+            }
+         }
+         part { name: "frame";
+            type: IMAGE;
+            description { state: "default" 0.0;
+               rel1.relative: 0.0 0.0;
+               rel2.relative: 1.0 1.0;
+               image.normal: "frame.png";
+               aspect: 1 1;
+               aspect_preference: BOTH;
+            }
+         }
+      }
+      programs {
+         program { name: "open_door";
+            signal: "mouse,down,1";
+            source: "frame";
+            action: STATE_SET "open" 0.0;
+            target: "left_door";
+            target: "right_door";
+            transition: LINEAR 3.0;
+            after: "close_door";
+         }
+      }
+      programs {
+         program { name: "close_door";
+            action: STATE_SET "default" 0.0;
+            target: "left_door";
+            target: "right_door";
+            transition: SINUSOIDAL 1.0;
+         }
+      }
+   }
+}
