@@ -31,21 +31,73 @@ on_click(void *data EINA_UNUSED,
 }
 
 static void
+on_theme_signal(void *data EINA_UNUSED,
+         Evas_Object *obj EINA_UNUSED,
+         const char *emission,
+         const char *source)
+{
+   if (!strcmp(emission, "theme,exit"))
+     {
+        EINA_LOG_INFO("theme exit");
+        elm_exit();
+     }
+   else
+     {
+        EINA_LOG_DBG("recv theme sig : %s - %s", emission, source);
+     }
+}
+
+static Eina_Bool
+edje_load(Evas_Object *evas, const char *edje_file_path, const char *group)
+{
+   if (!edje_object_file_set(evas, edje_file_path, group))
+     {
+        int err = edje_object_load_error_get(evas);
+        const char *errmsg = edje_load_error_str(err);
+        EINA_LOG_ERR("Could not load '%s' group from %s: %s",
+                     group, edje_file_path, errmsg);
+
+        return EINA_FALSE;
+     }
+
+   return EINA_TRUE;
+}
+
+static void
 use_layout(Evas_Object *win, const char *theme)
 {
    Evas_Object *layout;
-   char buf[MAX_PATH];
+   const char *title = NULL;
+   char edje_file_path[MAX_PATH];
 
-   // load and add the layout
-   layout = elm_layout_add(win);
+   snprintf(edje_file_path, sizeof(edje_file_path),
+            "%s/themes/%s.edj", elm_app_data_dir_get(), theme);
+
+   // load and add the elm layout
+   /* layout = elm_layout_add(win); */
+   /* evas_object_size_hint_weight_set(layout, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND); */
+   /* elm_layout_file_set(layout, edje_file_path, "layout"); */
+   /* elm_win_resize_object_add(win, layout); */
+   /* evas_object_show(layout); */
+
+   /* title = elm_layout_data_get(layout, "title"); */
+   /* edje_object_signal_callback_add(elm_layout_edje_get(layout), "*", "*", on_theme_signal, NULL); */
+
+   // load and add the edje layout
+   layout = edje_object_add(win);
+   if (!edje_load(layout, edje_file_path, "layout"))
+     {
+        evas_object_del(layout);
+        return;
+     }
    evas_object_size_hint_weight_set(layout, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
-   snprintf(buf, sizeof(buf), "%s/themes/%s.edj", elm_app_data_dir_get(), theme);
-   elm_layout_file_set(layout, buf, "layout");
    elm_win_resize_object_add(win, layout);
    evas_object_show(layout);
 
+   title = edje_object_data_get(layout, "title");
+   edje_object_signal_callback_add(layout, "*", "*", on_theme_signal, NULL);
+
    // set the window title from the settings
-   const char *title = elm_layout_data_get(layout, "title");
    if (title)
      {
         elm_win_title_set(win, title);
