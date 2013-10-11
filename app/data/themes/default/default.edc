@@ -73,18 +73,28 @@ collections {
          }
       }
       programs {
-         program { name: "open_door";
+         program { name: "on_click";
             signal: "mouse,down,1";
             source: "frame";
+            script {
+              new st[32];
+              new Float:vl;
+              get_state(PART:"left_door", st, sizeof(st)-1, vl);
+              if (!strcmp(st, "open")) {
+                emit("theme,exit","theme");
+              } else {
+                run_program(get_program_id("open_doors"));
+              }
+            }
+         }
+         program { name: "open_doors";
             action: STATE_SET "open" 0.0;
             target: "left_door";
             target: "right_door";
             transition: LINEAR 3.0;
-            after: "close_door";
+            after: "close_doors";
          }
-      }
-      programs {
-         program { name: "close_door";
+         program { name: "close_doors";
             action: STATE_SET "default" 0.0;
             target: "left_door";
             target: "right_door";
