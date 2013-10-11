@@ -1,13 +1,13 @@
 collections {
-   images {
-      image: "tunnel.png" COMP;
-      image: "frame.png" COMP;
-      image: "left_door.png" COMP;
-      image: "right_door.png" COMP;
-   }
    group { name: "layout";
       data {
-         item: "title" "Elm Layout";
+         item: "title" "EDC Layout";
+      }
+      images {
+         image: "tunnel.png" COMP;
+         image: "frame.png" COMP;
+         image: "left_door.png" COMP;
+         image: "right_door.png" COMP;
       }
       parts {
          part { name: "tunnel";
