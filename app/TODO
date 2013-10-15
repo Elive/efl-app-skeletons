@@ -6,9 +6,12 @@
 - lcov
 - eina_log_level
 - ecore_getpot
-- data/images
+- data/desktop
 - data/themes
-+ data/desktop
-+ data/fonts
-+ data/icons
+- data/themes/images
++ data/themes/fonts
++ data/themes/sounds
++ application icon
++ doxygen
++ gettext
 + elm_skel.spec.in

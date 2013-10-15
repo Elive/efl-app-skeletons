@@ -225,6 +225,8 @@ AC_OUTPUT([
    Makefile
    src/Makefile
    data/Makefile
+   data/desktop/Makefile
+   data/desktop/elm-skel.desktop
    data/themes/Makefile
    data/themes/default/Makefile
 ])

@@ -1,0 +1,12 @@
+[Desktop Entry]
+Encoding=UTF-8
+Version=@VERSION@
+Type=Application
+Name=Elm-Skel
+Name[fr]=Elm-Skel
+GenericName=Application Skeletion
+Comment=ELM Application Skeleton
+Icon=elm-skel
+TryExec=elm_skel
+Exec=elm_skel -t default
+Categories=Development;Utility;
