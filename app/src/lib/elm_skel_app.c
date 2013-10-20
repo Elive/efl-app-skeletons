@@ -1,5 +1,5 @@
 #include "elm_skel_app.h"
-#include "elm_skel.h"
+#include "Lib.h"
 
 #define MAX_PATH 64
 
@@ -177,7 +177,7 @@ elm_skel_app(Eina_Bool fullscreen, Eina_Rectangle geometry, const char* theme)
    else
      {
         set_content(win);
-        elm_win_title_set(win, elm_skel_hello());
+        elm_win_title_set(win, elm_skel_lib_hello());
      }
 
    // set position and size according to parameters

@@ -3,11 +3,18 @@
 #endif /* HAVE_CONFIG_H */
 
 #include <check.h>
-#include "elm_skel.h"
+#include "Lib.h"
 
 START_TEST (test_elm_skel_lib)
 {
-    ck_assert(strcmp(elm_skel_hello(), "Hello from the EFL world") == 0);
+    ck_assert(elm_skel_lib_init() == 1);
+    ck_assert(elm_skel_lib_init() == 2);
+
+    ck_assert(strcmp(elm_skel_lib_hello(), "Hello from the EFL world") == 0);
+
+    ck_assert(elm_skel_lib_shutdown() == 1);
+    ck_assert(elm_skel_lib_shutdown() == 0);
+    ck_assert(elm_skel_lib_shutdown() == 0);
 }
 END_TEST
 

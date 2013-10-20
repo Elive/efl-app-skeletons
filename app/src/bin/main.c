@@ -2,7 +2,7 @@
 # include <config.h>
 #endif /* HAVE_CONFIG_H */
 
-#include "elm_skel.h"
+#include "Lib.h"
 #include "elm_skel_app.h"
 #include <Ecore_Getopt.h>
 
@@ -105,8 +105,11 @@ elm_main(int argc, char *argv[])
                 elm_app_data_dir_get());
 
    elm_skel_app(fullscreen, geometry, theme);
+   elm_skel_lib_init();
 
    elm_run();
+
+   elm_skel_lib_shutdown();
    elm_shutdown();
 
    return EXIT_SUCCESS;
