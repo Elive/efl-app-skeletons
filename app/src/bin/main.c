@@ -2,13 +2,11 @@
 # include <config.h>
 #endif /* HAVE_CONFIG_H */
 
-#include "Lib.h"
-#include "elm_skel_app.h"
 #include <Ecore_Getopt.h>
 
-#undef EINA_LOG_DOMAIN_DEFAULT
-#define EINA_LOG_DOMAIN_DEFAULT _log_dom
-static int _log_dom = -1;
+#include "app.h"
+
+int _elm_skel_log_dom = -1;
 
 static const Ecore_Getopt options =
 {
@@ -48,13 +46,14 @@ static const Ecore_Getopt options =
 EAPI_MAIN int
 elm_main(int argc, char *argv[])
 {
+   char edje_file_path[MAX_PATH];
    Eina_Bool exit = EINA_FALSE;
    int args;
-   char *theme = NULL;
+   char *theme = "default";
    char *engine = NULL;
    int verbosity = 0;
    Eina_Bool fullscreen = EINA_FALSE;
-   Eina_Rectangle geometry = {600, 300, 200, 50};
+   Eina_Rectangle geometry = {600, 300, 300, 200};
    int eina_log_level = EINA_LOG_LEVEL_WARN;
 
    Ecore_Getopt_Value values[] =
@@ -96,20 +95,28 @@ elm_main(int argc, char *argv[])
    if (engine) elm_config_preferred_engine_set(engine);
 
    eina_log_color_disable_set(EINA_FALSE);
-   _log_dom = eina_log_domain_register(PACKAGE_NAME, EINA_COLOR_CYAN);
+   _elm_skel_log_dom = eina_log_domain_register(PACKAGE_NAME, EINA_COLOR_CYAN);
 
-   EINA_LOG_INFO("%s %s:", PACKAGE_NAME, VERSION);
-   EINA_LOG_DBG("\n  bin: %s\n  lib: %s\n data: %s",
+   EINA_LOG_DOM_INFO(_elm_skel_log_dom, "%s %s:", PACKAGE_NAME, VERSION);
+   EINA_LOG_DOM_DBG(_elm_skel_log_dom, "\n  bin: %s\n  lib: %s\n data: %s",
                 elm_app_bin_dir_get(),
                 elm_app_lib_dir_get(),
                 elm_app_data_dir_get());
 
-   elm_skel_app(fullscreen, geometry, theme);
-   elm_skel_lib_init();
+   snprintf(edje_file_path, sizeof(edje_file_path), "%s/themes/%s.edj",
+            elm_app_data_dir_get(), theme);
+
+   if (!gui_create(fullscreen, geometry, edje_file_path))
+     {
+        EINA_LOG_DOM_ERR(_elm_skel_log_dom, "unable to create application window");
+        return EXIT_FAILURE;
+     }
+
+   app_init();
 
    elm_run();
 
-   elm_skel_lib_shutdown();
+   app_shutdown();
    elm_shutdown();
 
    return EXIT_SUCCESS;

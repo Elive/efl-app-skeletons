@@ -1,8 +1,8 @@
+data {
+   item: "title" "ELM Skel App";
+}
 collections {
-   group { name: "layout";
-      data {
-         item: "title" "EDC Layout";
-      }
+   group { name: "tunnel_layout";
       images {
          image: "tunnel.png" COMP;
          image: "frame.png" COMP;
@@ -81,7 +81,7 @@ collections {
               new Float:vl;
               get_state(PART:"left_door", st, sizeof(st)-1, vl);
               if (!strcmp(st, "open")) {
-                emit("theme,exit","theme");
+                emit("tunnel,exit","theme");
               } else {
                 run_program(get_program_id("open_doors"));
               }

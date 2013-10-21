@@ -2,12 +2,10 @@
 
 includesdir = $(includedir)/elm_skel-@VMAJ@
 includes_HEADERS = \
-   lib/Lib.h \
-   lib/elm_skel_app.h
+   lib/Lib.h
 
 lib_libelm_skel_la_SOURCES = \
-   lib/lib.c \
-   lib/elm_skel_app.c
+   lib/lib.c
 
 EXTRA_DIST += lib/lib_private.h
 
