@@ -1,0 +1,9 @@
+
+# ENV
+EINA_LOG_LEVEL=3
+EINA_LOG_LEVELS="eo:4"
+
+# GDB
+LD_LIBRARY_PATH=./src/lib/eo/.libs/ gdb src/tests/eo/.libs/test_interface
+
+CK_VERBOSITY=verbose ./tests/eo/eo_suite
