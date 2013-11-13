@@ -46,7 +46,8 @@ static const Ecore_Getopt options =
 EAPI_MAIN int
 elm_main(int argc, char *argv[])
 {
-   char edje_file_path[MAX_PATH];
+   char theme_file_path[MAX_PATH];
+   char extension_file_path[MAX_PATH];
    Eina_Bool exit = EINA_FALSE;
    int args;
    char *theme = "default";
@@ -75,7 +76,7 @@ elm_main(int argc, char *argv[])
    elm_app_compile_bin_dir_set(PACKAGE_BIN_DIR);
    elm_app_compile_lib_dir_set(PACKAGE_LIB_DIR);
    elm_app_compile_data_dir_set(PACKAGE_DATA_DIR);
-   elm_app_info_set(elm_main, "elm_skel", "themes/default.edje");
+   elm_app_info_set(elm_main, "elm_skel", "themes/default.edj");
 
    args = ecore_getopt_parse(&options, values, argc, argv);
 
@@ -103,10 +104,12 @@ elm_main(int argc, char *argv[])
                 elm_app_lib_dir_get(),
                 elm_app_data_dir_get());
 
-   snprintf(edje_file_path, sizeof(edje_file_path), "%s/themes/%s.edj",
+   snprintf(theme_file_path, MAX_PATH, "%s/themes/%s.edj",
+            elm_app_data_dir_get(), theme);
+   snprintf(extension_file_path, MAX_PATH, "%s/themes/%s-ext.edj",
             elm_app_data_dir_get(), theme);
 
-   if (!gui_create(fullscreen, geometry, edje_file_path))
+   if (!gui_create(fullscreen, geometry, theme_file_path))
      {
         EINA_LOG_DOM_ERR(_elm_skel_log_dom, "unable to create application window");
         return EXIT_FAILURE;

@@ -39,12 +39,15 @@ extern int _elm_skel_log_dom;
 #define DBG(...) EINA_LOG_DOM_DBG(_elm_skel_log_dom, __VA_ARGS__)
 
 typedef struct _app {
-     Evas_Object  *win;
-     Evas_Object  *nf;
-     Evas_Object  *notify;
-     Evas_Object  *popup;
-     Eina_Bool    init_done;
-     const char   *edje_path;
+   Eina_Bool      init_done;
+   const char     *theme_path;
+   const char     *extension_path;
+   struct {
+        Evas_Object  *win;
+        Evas_Object  *popup;
+        Evas_Object  *notify;
+        Evas_Object  *nf;
+   } gui;
 } App;
 
 Evas_Object*

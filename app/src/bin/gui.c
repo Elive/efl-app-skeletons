@@ -59,9 +59,9 @@ _on_btn_click(void *data, Evas_Object *obj EINA_UNUSED, void *evt_inf EINA_UNUSE
 void
 app_notify(App *app, const char *msg)
 {
-   Evas_Object *lb = evas_object_data_get(app->notify, "msg");
+   Evas_Object *lb = evas_object_data_get(app->gui.notify, "msg");
    elm_object_text_set(lb, msg);
-   evas_object_show(app->notify);
+   evas_object_show(app->gui.notify);
 }
 
 static void
@@ -76,7 +76,7 @@ _create_notify(App *app, Evas_Object *parent)
 {
    Evas_Object *notify, *bx, *lb, *bt;
 
-   app->notify = notify = elm_notify_add(parent);
+   app->gui.notify = notify = elm_notify_add(parent);
    evas_object_size_hint_weight_set(notify, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
    elm_notify_align_set(notify, 0.5, 0.5);
    elm_notify_timeout_set(notify, 5.0);
@@ -107,8 +107,8 @@ _create_notify(App *app, Evas_Object *parent)
 void
 app_popup(App *app, const char *msg)
 {
-   elm_object_text_set(app->popup, msg);
-   evas_object_show(app->popup);
+   elm_object_text_set(app->gui.popup, msg);
+   evas_object_show(app->gui.popup);
 }
 
 static void
@@ -123,7 +123,7 @@ _create_popup(App *app, Evas_Object *parent)
 {
    Evas_Object *popup, *btn;
 
-   app->popup = popup = elm_popup_add(parent);
+   app->gui.popup = popup = elm_popup_add(parent);
    btn = elm_button_add(popup);
    elm_object_text_set(btn, "Close");
    elm_object_part_content_set(popup, "button1", btn);
@@ -173,24 +173,24 @@ _page2(void *data, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
    // load and add the elm layout
    /* layout = elm_layout_add(app->nf); */
    /* evas_object_size_hint_weight_set(layout, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND); */
-   /* elm_layout_file_set(layout, app->edje_path, "tunnel_layout"); */
+   /* elm_layout_file_set(layout, app->theme_path, "tunnel_layout"); */
 
    // load and add the edje layout
-   layout = edje_object_add(app->nf);
-   if (!_load_edje_group(layout, "tunnel_layout", app->edje_path))
+   layout = edje_object_add(app->gui.nf);
+   if (!_load_edje_group(layout, "tunnel_layout", app->theme_path))
      {
         evas_object_del(layout);
         return;
      }
    evas_object_size_hint_weight_set(layout, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
-   elm_win_resize_object_add(app->nf, layout);
+   elm_win_resize_object_add(app->gui.nf, layout);
    evas_object_show(layout);
 
    /* edje_object_signal_callback_add(elm_layout_edje_get(layout), "*", "*", _on_theme_signal, app); */
    edje_object_signal_callback_add(layout, "*", "*", _on_tunnel_signal, &app);
 
-   it = elm_naviframe_item_push(app->nf, "Tunnel", NULL, NULL, layout, NULL);
-   evas_object_data_set(app->nf, "page2", it);
+   it = elm_naviframe_item_push(app->gui.nf, "Tunnel", NULL, NULL, layout, NULL);
+   evas_object_data_set(app->gui.nf, "page2", it);
 }
 
 static void
@@ -203,16 +203,16 @@ _page1(void *data, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
    // add a vertical box as a resize object for the window
    // (controls window minimum size and gets resized if window is resized)
    // expands so that the window can be resized
-   box = elm_box_add(app->nf);
+   box = elm_box_add(app->gui.nf);
    elm_box_horizontal_set(box, EINA_FALSE);
    evas_object_size_hint_weight_set(box, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
-   elm_win_resize_object_add(app->nf, box);
+   elm_win_resize_object_add(app->gui.nf, box);
    evas_object_show(box);
 
    // add a label widget, set the text
    // pack it at the end of the box
    // centered has it doesn't fill horizontaly
-   lab = elm_label_add(app->nf);
+   lab = elm_label_add(app->gui.nf);
    elm_object_text_set(lab, "Label");
    evas_object_size_hint_weight_set(lab, 0, EVAS_HINT_EXPAND);
    elm_box_pack_end(box, lab);
@@ -222,7 +222,7 @@ _page1(void *data, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
    // expands and fills the space in both directions
    // pack it at the end of the box
    // call on_click when it is clicked
-   btn = elm_button_add(app->nf);
+   btn = elm_button_add(app->gui.nf);
    elm_object_text_set(btn, "OK");
    evas_object_size_hint_weight_set(btn, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
    /* evas_object_size_hint_align_set(btn, EVAS_HINT_FILL, EVAS_HINT_FILL); */
@@ -233,7 +233,7 @@ _page1(void *data, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
 
    // add naviframe button,
    // by default only left button to previous existing frame is set
-   btn = elm_button_add(app->nf);
+   btn = elm_button_add(app->gui.nf);
    elm_object_text_set(btn, "Tunnel");
    /* elm_object_tooltip_text_set(btn, "Next naviframe"); */
    /* elm_object_tooltip_window_mode_set(btn, EINA_TRUE); */
@@ -241,13 +241,13 @@ _page1(void *data, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
    evas_object_smart_callback_add(btn, "clicked", _page2, app);
 
    // add button icon
-   ic = elm_icon_add(app->nf);
+   ic = elm_icon_add(app->gui.nf);
    elm_icon_standard_set(ic, "arrow_right");
    evas_object_size_hint_aspect_set(ic, EVAS_ASPECT_CONTROL_VERTICAL, 1, 1);
    elm_layout_content_set(btn, "icon", ic);
 
-   it = elm_naviframe_item_push(app->nf, "Simple Page", NULL, btn, box, NULL);
-   evas_object_data_set(app->nf, "page1", it);
+   it = elm_naviframe_item_push(app->gui.nf, "Simple Page", NULL, btn, box, NULL);
+   evas_object_data_set(app->gui.nf, "page1", it);
 }
 
 static Evas_Object *
@@ -255,7 +255,7 @@ _create_naviframe(App *app, Evas_Object *parent)
 {
    Evas_Object *nf;
 
-   app->nf = nf = elm_naviframe_add(parent);
+   app->gui.nf = nf = elm_naviframe_add(parent);
    evas_object_size_hint_weight_set(nf, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
    elm_win_resize_object_add(parent, nf);
    evas_object_show(nf);
@@ -277,12 +277,12 @@ gui_create(Eina_Bool fullscreen, Eina_Rectangle geometry, const char* edje_path)
 
    ecore_event_handler_add(ECORE_EVENT_SIGNAL_EXIT, _sigint_handler, NULL);
 
-   app.edje_path = edje_path;
+   app.theme_path = edje_path;
    title = edje_file_data_get(edje_path, "title");
    if (!title) title = "Missing Title";
 
    // create window
-   app.win = win = elm_win_add(NULL, "hello", ELM_WIN_BASIC);
+   app.gui.win = win = elm_win_add(NULL, "hello", ELM_WIN_BASIC);
    /* win = elm_win_util_standard_add("hello", elm_skel_hello()); */
    if (!win) return NULL;
    evas_object_smart_callback_add(win, "delete,request", _on_del, NULL);
