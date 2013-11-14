@@ -41,24 +41,6 @@ _on_tunnel_signal(void *data, Evas_Object *obj, const char *sig, const char *src
      _app_exit(app);
 }
 
-/* EDJE */
-
-static Eina_Bool
-_load_edje_group(Evas_Object *evas, const char *group, const char *edje_path)
-{
-   if (!edje_object_file_set(evas, edje_path, group))
-     {
-        int err = edje_object_load_error_get(evas);
-        const char *errmsg = edje_load_error_str(err);
-        ERR("Could not load '%s' group from %s: %s",
-                     group, edje_path, errmsg);
-
-        return EINA_FALSE;
-     }
-
-   return EINA_TRUE;
-}
-
 /* NAVIFRAME */
 
 static void
@@ -116,22 +98,12 @@ _frame_tunnel_create(void *data, Evas_Object *obj EINA_UNUSED, void *event_info 
    Evas_Object *layout;
 
    // load and add the elm layout
-   /* layout = elm_layout_add(app->nf); */
-   /* evas_object_size_hint_weight_set(layout, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND); */
-   /* elm_layout_file_set(layout, app->theme_path, "tunnel_layout"); */
-
-   // load and add the edje layout
-   layout = edje_object_add(app->gui.nf);
-   if (!_load_edje_group(layout, "tunnel_layout", app->theme_path))
-     {
-        evas_object_del(layout);
-        return;
-     }
+   layout = elm_layout_add(app->gui.nf);
+   elm_layout_file_set(layout, app->theme_path, "tunnel_layout");
    evas_object_size_hint_weight_set(layout, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
-   elm_win_resize_object_add(app->gui.nf, layout);
    evas_object_show(layout);
 
-   edje_object_signal_callback_add(layout, "*", "*", _on_tunnel_signal, app);
+   elm_object_signal_callback_add(layout, "*", "*", _on_tunnel_signal, app);
 
    it = elm_naviframe_item_push(app->gui.nf, "Tunnel", NULL, NULL, layout, NULL);
    evas_object_data_set(app->gui.nf, "page2", it);
