@@ -106,9 +106,9 @@ elm_main(int argc, char *argv[])
                 elm_app_lib_dir_get(),
                 elm_app_data_dir_get());
 
-   snprintf(theme_file_path, MAX_PATH, "%s/themes/%s.edj",
+   snprintf(theme_file_path, sizeof(theme_file_path), "%s/themes/%s.edj",
             elm_app_data_dir_get(), theme);
-   snprintf(extension_file_path, MAX_PATH, "%s/themes/%s-ext.edj",
+   snprintf(extension_file_path, sizeof(extension_file_path), "%s/themes/%s-ext.edj",
             elm_app_data_dir_get(), theme);
 
    app = app_get(theme_file_path, extension_file_path);

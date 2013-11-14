@@ -244,18 +244,21 @@ app_gui_create(App *app, Eina_Bool fullscreen, Eina_Rectangle geometry)
 
    ecore_event_handler_add(ECORE_EVENT_SIGNAL_EXIT, _sigint_handler, NULL);
 
+   /* if (app->extension_path) */
+   /*    elm_theme_overlay_add(NULL, app->extension_path); */
+
    title = edje_file_data_get(app->theme_path, "title");
    if (!title) title = "Missing Title";
 
    // create window
    app->gui.win = win = elm_win_add(NULL, "hello", ELM_WIN_BASIC);
-   /* win = elm_win_util_standard_add("hello", title); */
+   /* app->gui.win = win = elm_win_util_standard_add("hello", title); */
    if (!win) return NULL;
    evas_object_smart_callback_add(win, "delete,request", _on_del, NULL);
    elm_win_title_set(win, title);
-   elm_win_focus_highlight_enabled_set(win, EINA_TRUE);
    elm_win_autodel_set(win, EINA_TRUE);
    elm_win_icon_name_set(win, "elm-skel");
+   /* elm_win_focus_highlight_enabled_set(win, EINA_TRUE); */
    evas_object_show(win);
 
    // add resizing background (done by elm_win_util_standard_add)
