@@ -33,12 +33,11 @@ _on_tunnel_signal(void *data, Evas_Object *obj, const char *sig, const char *src
 {
    App *app = (App *) data;
 
-   if (!strcmp(sig, "mouse,move"))
-     return;
-
-   INF("recv theme sig : %s - %s (%p)", sig, src, obj);
    if (!strcmp(sig, "tunnel,exit"))
-     _app_exit(app);
+     {
+        INF("recv theme sig : %s - %s (%p)", sig, src, obj);
+        _app_exit(app);
+     }
 }
 
 /* NAVIFRAME */
@@ -80,12 +79,46 @@ _naviframe_right_button_create(App *app, const char *name, Evas_Smart_Cb cb)
 }
 
 static void
-_frame_tunnel_update(void *data, Elm_Object_Item *it, const char *sig EINA_UNUSED, const char *src EINA_UNUSED)
+_naviframe_content_set(App *app, Evas_Object *content, App_Frame cur, App_Frame next)
+{
+   Gui_Frame *frame;
+   Elm_Object_Item *it;
+   Evas_Object *btn = NULL;
+
+   if (next < MAX_FRAMES)
+     {
+        frame = &app->gui.frames[next];
+        btn = _naviframe_right_button_create(app, frame->name, frame->create_cb);
+     }
+
+   frame = &app->gui.frames[cur];
+   it = elm_naviframe_item_push(app->gui.nf, frame->name, NULL, btn, content, NULL);
+   elm_object_item_signal_callback_add(it, "elm,state,prev,popped", "elm", frame->update_cb, app);
+   elm_naviframe_item_pop_cb_set(it, frame->pop_cb, app);
+
+   INF("frame push %s", elm_object_item_part_text_get(it, "elm.text.title"));
+}
+
+static Eina_Bool
+_frame_common_delete(void *data, Elm_Object_Item *it)
 {
    App *app = (App *) data;
    Evas_Object *edj = _naviframe_item_edje_get(it);
 
-   INF("update tunnel frame %p", edj);
+   INF("frame delete %s %p", elm_object_item_part_text_get(it, "elm.text.title"), edj);
+
+   (void) app;
+
+   return EINA_TRUE;
+}
+
+static void
+_frame_common_update(void *data, Elm_Object_Item *it, const char *sig EINA_UNUSED, const char *src EINA_UNUSED)
+{
+   App *app = (App *) data;
+   Evas_Object *edj = _naviframe_item_edje_get(it);
+
+   INF("frame update %s %p", elm_object_item_part_text_get(it, "elm.text.title"), edj);
 
    (void) app;
 }
@@ -94,7 +127,6 @@ static void
 _frame_tunnel_create(void *data, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
 {
    App *app = (App *) data;
-   Elm_Object_Item *it;
    Evas_Object *layout;
 
    // load and add the elm layout
@@ -105,9 +137,7 @@ _frame_tunnel_create(void *data, Evas_Object *obj EINA_UNUSED, void *event_info 
 
    elm_object_signal_callback_add(layout, "*", "*", _on_tunnel_signal, app);
 
-   it = elm_naviframe_item_push(app->gui.nf, "Tunnel", NULL, NULL, layout, NULL);
-   evas_object_data_set(app->gui.nf, "page2", it);
-   elm_object_item_signal_callback_add(it, "elm,state,prev,popped", "elm", _frame_tunnel_update, app);
+   _naviframe_content_set(app, layout, FRAME_TUNNEL, MAX_FRAMES);
 }
 
 static void
@@ -120,22 +150,10 @@ _frame_main_btn_click(void *data, Evas_Object *obj EINA_UNUSED, void *evt_inf EI
 }
 
 static void
-_frame_main_update(void *data, Elm_Object_Item *it, const char *sig EINA_UNUSED, const char *src EINA_UNUSED)
-{
-   App *app = (App *) data;
-   Evas_Object *edj = _naviframe_item_edje_get(it);
-
-   INF("update main frame %p", edj);
-
-   (void) app;
-}
-
-static void
 _frame_main_create(void *data, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
 {
    App *app = (App *) data;
 
-   Elm_Object_Item *it;
    Evas_Object *box, *lab, *btn;
 
    // add a vertical box as a resize object for the window
@@ -169,10 +187,7 @@ _frame_main_create(void *data, Evas_Object *obj EINA_UNUSED, void *event_info EI
    elm_object_focus_set(btn, EINA_TRUE);
    evas_object_show(btn);
 
-   btn = _naviframe_right_button_create(app, "Tunnel", _frame_tunnel_create);
-
-   it = elm_naviframe_item_push(app->gui.nf, "Main", NULL, btn, box, NULL);
-   elm_object_item_signal_callback_add(it, "elm,state,prev,popped", "elm", _frame_main_update, app);
+   _naviframe_content_set(app, box, FRAME_MAIN, FRAME_TUNNEL);
 }
 
 static Evas_Object *
@@ -185,7 +200,6 @@ _create_naviframe(App *app, Evas_Object *parent)
    elm_win_resize_object_add(parent, nf);
    evas_object_show(nf);
    evas_object_smart_callback_add(nf, "title,clicked", _naviframe_title_clicked, app);
-   _frame_main_create(app, NULL, NULL);
 
    return nf;
 }
@@ -265,7 +279,18 @@ app_gui_create(App *app, Eina_Bool fullscreen, Eina_Rectangle geometry)
    /* elm_win_focus_highlight_enabled_set(win, EINA_TRUE); */
    evas_object_show(win);
 
+   /* setup naviframes */
+   app->gui.frames[FRAME_MAIN].name = "Main";
+   app->gui.frames[FRAME_MAIN].create_cb = _frame_main_create;
+   app->gui.frames[FRAME_MAIN].pop_cb = _frame_common_delete;
+   app->gui.frames[FRAME_MAIN].update_cb = _frame_common_update;
+   app->gui.frames[FRAME_TUNNEL].name = "Tunnel";
+   app->gui.frames[FRAME_TUNNEL].create_cb = _frame_tunnel_create;
+   app->gui.frames[FRAME_TUNNEL].pop_cb = _frame_common_delete;
+   app->gui.frames[FRAME_TUNNEL].update_cb = _frame_common_update;
+
    _create_naviframe(app, win);
+   app->gui.frames[FRAME_MAIN].create_cb(app, NULL, NULL);
 
    // set position and size according to parameters
    if(fullscreen)

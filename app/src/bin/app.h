@@ -38,6 +38,21 @@ extern int _elm_skel_log_dom;
 #endif
 #define DBG(...) EINA_LOG_DOM_DBG(_elm_skel_log_dom, __VA_ARGS__)
 
+typedef enum _App_Frames
+{
+   FRAME_MAIN = 0,
+   FRAME_TUNNEL,
+   MAX_FRAMES
+} App_Frame;
+
+typedef struct _Gui_Frame
+{
+   const char *name;
+   Evas_Smart_Cb create_cb;
+   Elm_Naviframe_Item_Pop_Cb pop_cb;
+   Elm_Object_Item_Signal_Cb update_cb;
+} Gui_Frame;
+
 typedef struct _app {
    Eina_Bool      init_done;
    const char     *theme_path;
@@ -46,6 +61,7 @@ typedef struct _app {
         Evas_Object  *win;
         Evas_Object  *popup;
         Evas_Object  *nf;
+        Gui_Frame     frames[MAX_FRAMES];
    } gui;
 } App;
 
@@ -69,9 +85,6 @@ app_shutdown(App *app);
 
 Evas_Object*
 app_gui_create(App *app, Eina_Bool fullscreen, Eina_Rectangle geometry);
-
-void
-app_gui_push_first_frame(App *app);
 
 void
 app_gui_notify(App *app, const char *msg);
