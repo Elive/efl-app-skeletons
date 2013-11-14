@@ -42,6 +42,7 @@ _on_tunnel_signal(void *data, Evas_Object *obj, const char *sig, const char *src
 }
 
 /* EDJE */
+
 static Eina_Bool
 _load_edje_group(Evas_Object *evas, const char *group, const char *edje_path)
 {
@@ -61,17 +62,7 @@ _load_edje_group(Evas_Object *evas, const char *group, const char *edje_path)
 /* NAVIFRAME */
 
 static void
-_on_btn_click(void *data, Evas_Object *obj EINA_UNUSED, void *evt_inf EINA_UNUSED)
-{
-   App *app = (App *) data;
-
-   INF("clicked");
-   app_gui_notify(app, "If you see a light at the end of the tunnel,"
-             "<br> it could be a train…");
-}
-
-static void
-_on_nf_title_clicked(void *data, Evas_Object *obj EINA_UNUSED, void *evt_inf EINA_UNUSED)
+_naviframe_title_clicked(void *data, Evas_Object *obj EINA_UNUSED, void *evt_inf EINA_UNUSED)
 {
    App *app = (App *) data;
 
@@ -79,11 +70,46 @@ _on_nf_title_clicked(void *data, Evas_Object *obj EINA_UNUSED, void *evt_inf EIN
    (void) app;
 }
 
-static void _page1(void *data, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED);
-static void _page2(void *data, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED);
+static Evas_Object *
+_naviframe_item_edje_get(Elm_Object_Item *it)
+{
+   Evas_Object *layout = elm_object_item_part_content_get(it, "elm.swallow.content");
+   return elm_layout_edje_get(layout);
+}
+
+static Evas_Object *
+_naviframe_right_button_create(App *app, const char *name, Evas_Smart_Cb cb)
+{
+   Evas_Object *btn, *ic;
+
+   // add naviframe button,
+   // by default only left button to previous existing frame is set
+   btn = elm_button_add(app->gui.nf);
+   elm_object_text_set(btn, name);
+   evas_object_size_hint_align_set(btn, EVAS_HINT_FILL, EVAS_HINT_FILL);
+   evas_object_smart_callback_add(btn, "clicked", cb, app);
+
+   ic = elm_icon_add(app->gui.nf);
+   elm_icon_standard_set(ic, "arrow_right");
+   evas_object_size_hint_aspect_set(ic, EVAS_ASPECT_CONTROL_VERTICAL, 1, 1);
+   elm_layout_content_set(btn, "icon", ic);
+
+   return btn;
+}
 
 static void
-_page2(void *data, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
+_frame_tunnel_update(void *data, Elm_Object_Item *it, const char *sig EINA_UNUSED, const char *src EINA_UNUSED)
+{
+   App *app = (App *) data;
+   Evas_Object *edj = _naviframe_item_edje_get(it);
+
+   INF("update tunnel frame %p", edj);
+
+   (void) app;
+}
+
+static void
+_frame_tunnel_create(void *data, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
 {
    App *app = (App *) data;
    Elm_Object_Item *it;
@@ -105,19 +131,40 @@ _page2(void *data, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
    elm_win_resize_object_add(app->gui.nf, layout);
    evas_object_show(layout);
 
-   /* edje_object_signal_callback_add(elm_layout_edje_get(layout), "*", "*", _on_theme_signal, app); */
    edje_object_signal_callback_add(layout, "*", "*", _on_tunnel_signal, app);
 
    it = elm_naviframe_item_push(app->gui.nf, "Tunnel", NULL, NULL, layout, NULL);
    evas_object_data_set(app->gui.nf, "page2", it);
+   elm_object_item_signal_callback_add(it, "elm,state,prev,popped", "elm", _frame_tunnel_update, app);
 }
 
 static void
-_page1(void *data, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
+_frame_main_btn_click(void *data, Evas_Object *obj EINA_UNUSED, void *evt_inf EINA_UNUSED)
 {
    App *app = (App *) data;
+
+   app_gui_notify(app, "If you see a light at the end of the tunnel,"
+             "<br> it could be a train…");
+}
+
+static void
+_frame_main_update(void *data, Elm_Object_Item *it, const char *sig EINA_UNUSED, const char *src EINA_UNUSED)
+{
+   App *app = (App *) data;
+   Evas_Object *edj = _naviframe_item_edje_get(it);
+
+   INF("update main frame %p", edj);
+
+   (void) app;
+}
+
+static void
+_frame_main_create(void *data, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
+{
+   App *app = (App *) data;
+
    Elm_Object_Item *it;
-   Evas_Object *box, *lab, *btn, *ic;
+   Evas_Object *box, *lab, *btn;
 
    // add a vertical box as a resize object for the window
    // (controls window minimum size and gets resized if window is resized)
@@ -146,27 +193,14 @@ _page1(void *data, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
    evas_object_size_hint_weight_set(btn, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
    /* evas_object_size_hint_align_set(btn, EVAS_HINT_FILL, EVAS_HINT_FILL); */
    elm_box_pack_end(box, btn);
-   evas_object_smart_callback_add(btn, "clicked", _on_btn_click, app);
+   evas_object_smart_callback_add(btn, "clicked", _frame_main_btn_click, app);
    elm_object_focus_set(btn, EINA_TRUE);
    evas_object_show(btn);
 
-   // add naviframe button,
-   // by default only left button to previous existing frame is set
-   btn = elm_button_add(app->gui.nf);
-   elm_object_text_set(btn, "Tunnel");
-   /* elm_object_tooltip_text_set(btn, "Next naviframe"); */
-   /* elm_object_tooltip_window_mode_set(btn, EINA_TRUE); */
-   evas_object_size_hint_align_set(btn, EVAS_HINT_FILL, EVAS_HINT_FILL);
-   evas_object_smart_callback_add(btn, "clicked", _page2, app);
+   btn = _naviframe_right_button_create(app, "Tunnel", _frame_tunnel_create);
 
-   // add button icon
-   ic = elm_icon_add(app->gui.nf);
-   elm_icon_standard_set(ic, "arrow_right");
-   evas_object_size_hint_aspect_set(ic, EVAS_ASPECT_CONTROL_VERTICAL, 1, 1);
-   elm_layout_content_set(btn, "icon", ic);
-
-   it = elm_naviframe_item_push(app->gui.nf, "Simple Page", NULL, btn, box, NULL);
-   evas_object_data_set(app->gui.nf, "page1", it);
+   it = elm_naviframe_item_push(app->gui.nf, "Main", NULL, btn, box, NULL);
+   elm_object_item_signal_callback_add(it, "elm,state,prev,popped", "elm", _frame_main_update, app);
 }
 
 static Evas_Object *
@@ -178,8 +212,8 @@ _create_naviframe(App *app, Evas_Object *parent)
    evas_object_size_hint_weight_set(nf, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
    elm_win_resize_object_add(parent, nf);
    evas_object_show(nf);
-   evas_object_smart_callback_add(nf, "title,clicked", _on_nf_title_clicked, app);
-   _page1(app, NULL, NULL);
+   evas_object_smart_callback_add(nf, "title,clicked", _naviframe_title_clicked, app);
+   _frame_main_create(app, NULL, NULL);
 
    return nf;
 }
