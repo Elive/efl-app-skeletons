@@ -1,7 +1,4 @@
 #include "app.h"
-#include "Lib.h"
-
-static App app;
 
 static void
 _app_exit(App *app)
@@ -187,7 +184,7 @@ _page2(void *data, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
    evas_object_show(layout);
 
    /* edje_object_signal_callback_add(elm_layout_edje_get(layout), "*", "*", _on_theme_signal, app); */
-   edje_object_signal_callback_add(layout, "*", "*", _on_tunnel_signal, &app);
+   edje_object_signal_callback_add(layout, "*", "*", _on_tunnel_signal, app);
 
    it = elm_naviframe_item_push(app->gui.nf, "Tunnel", NULL, NULL, layout, NULL);
    evas_object_data_set(app->gui.nf, "page2", it);
@@ -259,7 +256,7 @@ _create_naviframe(App *app, Evas_Object *parent)
    evas_object_size_hint_weight_set(nf, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
    elm_win_resize_object_add(parent, nf);
    evas_object_show(nf);
-   evas_object_smart_callback_add(nf, "title,clicked", _on_nf_title_clicked, &app);
+   evas_object_smart_callback_add(nf, "title,clicked", _on_nf_title_clicked, app);
    _page1(app, NULL, NULL);
 
    return nf;
@@ -268,22 +265,19 @@ _create_naviframe(App *app, Evas_Object *parent)
 /* GUI */
 
 EAPI Evas_Object*
-gui_create(Eina_Bool fullscreen, Eina_Rectangle geometry, const char* edje_path)
+gui_create(App *app, Eina_Bool fullscreen, Eina_Rectangle geometry)
 {
    const char *title = NULL;
    Evas_Object *win, *bg;
 
-   memset(&app, 0, sizeof(App));
-
    ecore_event_handler_add(ECORE_EVENT_SIGNAL_EXIT, _sigint_handler, NULL);
 
-   app.theme_path = edje_path;
-   title = edje_file_data_get(edje_path, "title");
+   title = edje_file_data_get(app->theme_path, "title");
    if (!title) title = "Missing Title";
 
    // create window
-   app.gui.win = win = elm_win_add(NULL, "hello", ELM_WIN_BASIC);
-   /* win = elm_win_util_standard_add("hello", elm_skel_hello()); */
+   app->gui.win = win = elm_win_add(NULL, "hello", ELM_WIN_BASIC);
+   /* win = elm_win_util_standard_add("hello", title); */
    if (!win) return NULL;
    evas_object_smart_callback_add(win, "delete,request", _on_del, NULL);
    elm_win_title_set(win, title);
@@ -303,9 +297,9 @@ gui_create(Eina_Bool fullscreen, Eina_Rectangle geometry, const char* edje_path)
    elm_win_resize_object_add(win, bg);
    evas_object_show(bg);
 
-   _create_naviframe(&app, win);
-   _create_notify(&app, win);
-   _create_popup(&app, win);
+   _create_naviframe(app, win);
+   _create_notify(app, win);
+   _create_popup(app, win);
 
    // set position and size according to parameters
    if(fullscreen)
@@ -317,33 +311,8 @@ gui_create(Eina_Bool fullscreen, Eina_Rectangle geometry, const char* edje_path)
         evas_object_move(win, geometry.x, geometry.y);
         evas_object_resize(win, geometry.w, geometry.h);
      }
+   evas_object_show(win);
 
    return win;
-}
-
-Eina_Bool
-app_init(void)
-{
-   if (app.init_done)
-     return EINA_TRUE;
-
-   app_notify(&app, "Application initializing...");
-
-   if(!elm_skel_lib_init())
-     {
-        app_notify(&app, "initialization miserably failed.");
-        return EINA_FALSE;
-     }
-
-   app.init_done = EINA_TRUE;
-
-   return EINA_TRUE;
-}
-
-void
-app_shutdown(void)
-{
-   if (app.init_done)
-     elm_skel_lib_shutdown();
 }
 

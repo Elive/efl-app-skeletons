@@ -50,14 +50,24 @@ typedef struct _app {
    } gui;
 } App;
 
-Evas_Object*
-gui_create(Eina_Bool fullscreen, Eina_Rectangle geometry, const char* theme);
 
-Eina_Bool
-app_init(void);
+/* APP */
+
+App *
+app_get(const char *theme_path, const char *extension_path);
 
 void
-app_shutdown(void);
+app_free(App *app);
+
+Eina_Bool
+app_init(App *app);
+
+void
+app_shutdown(App *app);
+
+/* GUI */
+Evas_Object*
+gui_create(App *app, Eina_Bool fullscreen, Eina_Rectangle geometry);
 
 void
 app_notify(App *app, const char *msg);

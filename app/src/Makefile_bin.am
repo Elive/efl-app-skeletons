@@ -4,6 +4,7 @@ bin_PROGRAMS += bin/elm_skel
 
 bin_elm_skel_SOURCES = \
    bin/main.c \
+   bin/app.c \
    bin/gui.c
 
 EXTRA_DIST += bin/app.h

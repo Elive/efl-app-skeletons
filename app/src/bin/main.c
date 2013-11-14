@@ -46,6 +46,8 @@ static const Ecore_Getopt options =
 EAPI_MAIN int
 elm_main(int argc, char *argv[])
 {
+   App *app;
+
    char theme_file_path[MAX_PATH];
    char extension_file_path[MAX_PATH];
    Eina_Bool exit = EINA_FALSE;
@@ -109,18 +111,22 @@ elm_main(int argc, char *argv[])
    snprintf(extension_file_path, MAX_PATH, "%s/themes/%s-ext.edj",
             elm_app_data_dir_get(), theme);
 
-   if (!gui_create(fullscreen, geometry, theme_file_path))
+   app = app_get(theme_file_path, extension_file_path);
+   if (!gui_create(app, fullscreen, geometry))
      {
         EINA_LOG_DOM_ERR(_elm_skel_log_dom, "unable to create application window");
+        app_free(app);
         return EXIT_FAILURE;
      }
 
-   app_init();
+   app_init(app);
 
    elm_run();
 
-   app_shutdown();
+   app_shutdown(app);
    elm_shutdown();
+
+   app_free(app);
 
    return EXIT_SUCCESS;
 }
