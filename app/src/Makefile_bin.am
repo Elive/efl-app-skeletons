@@ -1,6 +1,6 @@
 ### Binaries
 
-bin_PROGRAMS += bin/elm_skel bin/elm_skel_ql
+bin_PROGRAMS += bin/elm_skel
 
 bin_elm_skel_SOURCES = \
    bin/main.c \
@@ -10,18 +10,5 @@ EXTRA_DIST += bin/app.h
 
 bin_elm_skel_LDADD =  $(top_builddir)/src/lib/libelm_skel.la
 bin_elm_skel_CFLAGS =
-bin_elm_skel_LDFLAGS =
+bin_elm_skel_LDFLAGS = $(LTLIBINTL)
 
-# QuickLaunch
-
-bin_elm_skel_ql_LTLIBRARIES = bin/elm_skel_ql.la
-bin_elm_skel_ql_SOURCES = $(bin_elm_skel_SOURCES)
-bin_elm_skel_ql_LDADD = $(top_builddir)/src/lib/libelm_skel.la
-bin_elm_skel_ql_CFLAGS = -DELM_LIB_QUICKLAUNCH=1
-bin_elm_skel_ql_LDFLAGS =
-
-bin_elm_skel_qldir = $(libdir)
-bin_elm_skel_ql_la_SOURCES = $(bin_elm_skel_SOURCES)
-bin_elm_skel_ql_la_LIBADD = @ELM_SKEL_LIBS@
-bin_elm_skel_ql_la_CFLAGS =
-bin_elm_skel_ql_la_LDFLAGS = -module @PROJECT_LTMODULE_FLAGS@
