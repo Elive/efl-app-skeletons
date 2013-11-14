@@ -41,94 +41,6 @@ _on_tunnel_signal(void *data, Evas_Object *obj, const char *sig, const char *src
      _app_exit(app);
 }
 
-static void
-_on_btn_click(void *data, Evas_Object *obj EINA_UNUSED, void *evt_inf EINA_UNUSED)
-{
-   App *app = (App *) data;
-
-   INF("clicked");
-   app_popup(app, "If you see a light at the end of the tunnel,"
-             "<br> it could be a train…");
-}
-
-/* NOTIFY */
-
-void
-app_notify(App *app, const char *msg)
-{
-   Evas_Object *lb = evas_object_data_get(app->gui.notify, "msg");
-   elm_object_text_set(lb, msg);
-   evas_object_show(app->gui.notify);
-}
-
-static void
-_notify_closed(void *data, Evas_Object *obj EINA_UNUSED, void *evt_inf EINA_UNUSED)
-{
-   Evas_Object *notify = (Evas_Object *)data;
-   evas_object_hide(notify);
-}
-
-static Evas_Object *
-_create_notify(App *app, Evas_Object *parent)
-{
-   Evas_Object *notify, *bx, *lb, *bt;
-
-   app->gui.notify = notify = elm_notify_add(parent);
-   evas_object_size_hint_weight_set(notify, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
-   elm_notify_align_set(notify, 0.5, 0.5);
-   elm_notify_timeout_set(notify, 5.0);
-   /* evas_object_smart_callback_add(notify, "timeout", _notify_timeout, NULL); */
-
-   bx = elm_box_add(notify);
-   elm_object_content_set(notify, bx);
-   elm_box_horizontal_set(bx, EINA_TRUE);
-   evas_object_show(bx);
-
-   lb = elm_label_add(notify);
-   elm_box_pack_end(bx, lb);
-   evas_object_show(lb);
-
-   bt = elm_button_add(notify);
-   elm_object_text_set(bt, "Close");
-   elm_box_pack_end(bx, bt);
-   evas_object_smart_callback_add(bt, "clicked", _notify_closed, notify);
-   evas_object_show(bt);
-
-   evas_object_data_set(notify, "msg", lb);
-
-   return notify;
-}
-
-/* POPUP */
-
-void
-app_popup(App *app, const char *msg)
-{
-   elm_object_text_set(app->gui.popup, msg);
-   evas_object_show(app->gui.popup);
-}
-
-static void
-_popup_closed(void *data, Evas_Object *obj EINA_UNUSED, void *evt_inf EINA_UNUSED)
-{
-   Evas_Object *popup = (Evas_Object *)data;
-   evas_object_hide(popup);
-}
-
-static Evas_Object *
-_create_popup(App *app, Evas_Object *parent)
-{
-   Evas_Object *popup, *btn;
-
-   app->gui.popup = popup = elm_popup_add(parent);
-   btn = elm_button_add(popup);
-   elm_object_text_set(btn, "Close");
-   elm_object_part_content_set(popup, "button1", btn);
-   evas_object_smart_callback_add(btn, "clicked", _popup_closed, popup);
-
-   return popup;
-}
-
 /* EDJE */
 static Eina_Bool
 _load_edje_group(Evas_Object *evas, const char *group, const char *edje_path)
@@ -147,6 +59,16 @@ _load_edje_group(Evas_Object *evas, const char *group, const char *edje_path)
 }
 
 /* NAVIFRAME */
+
+static void
+_on_btn_click(void *data, Evas_Object *obj EINA_UNUSED, void *evt_inf EINA_UNUSED)
+{
+   App *app = (App *) data;
+
+   INF("clicked");
+   app_gui_notify(app, "If you see a light at the end of the tunnel,"
+             "<br> it could be a train…");
+}
 
 static void
 _on_nf_title_clicked(void *data, Evas_Object *obj EINA_UNUSED, void *evt_inf EINA_UNUSED)
@@ -262,10 +184,60 @@ _create_naviframe(App *app, Evas_Object *parent)
    return nf;
 }
 
-/* GUI */
+/* POPUP */
+
+static void
+_popup_close_cb(void *data, Evas_Object *obj EINA_UNUSED, void *evt_inf EINA_UNUSED)
+{
+   App *app = (App *) data;
+
+   evas_object_del(app->gui.popup);
+   app->gui.popup = NULL;
+}
+
+void
+_app_gui_msg(App *app, const char *title, const char *msg, Eina_Bool error,
+            float timeout, Evas_Smart_Cb cb)
+{
+   Evas_Object *popup, *icon, *btn;
+
+   app->gui.popup = popup = elm_popup_add(app->gui.win);
+
+   if (timeout > 0)
+     elm_popup_timeout_set(popup, timeout);
+
+   icon = elm_icon_add(popup);
+   elm_object_style_set(popup, "transparent");
+   elm_icon_standard_set(icon, (error ? "error" : "info"));
+   elm_object_part_content_set(popup, "title,icon", icon);
+
+   elm_object_part_text_set(popup, "title,text", title);
+   elm_object_text_set(app->gui.popup, msg);
+   btn = elm_button_add(popup);
+   elm_object_text_set(btn, "Fermer");
+   elm_object_part_content_set(popup, "button3", btn);
+   evas_object_smart_callback_add(btn, "clicked", cb, app);
+
+
+   evas_object_show(app->gui.popup);
+}
+
+/* APP GUI API */
+
+void
+app_gui_notify(App *app, const char *msg)
+{
+   _app_gui_msg(app, "Info", msg, EINA_FALSE, 5.0, _popup_close_cb);
+}
+
+void
+app_gui_error(App *app, const char *msg)
+{
+   _app_gui_msg(app, "Error", msg, EINA_TRUE, 0, _popup_close_cb);
+}
 
 EAPI Evas_Object*
-gui_create(App *app, Eina_Bool fullscreen, Eina_Rectangle geometry)
+app_gui_create(App *app, Eina_Bool fullscreen, Eina_Rectangle geometry)
 {
    const char *title = NULL;
    Evas_Object *win, *bg;
@@ -298,8 +270,6 @@ gui_create(App *app, Eina_Bool fullscreen, Eina_Rectangle geometry)
    evas_object_show(bg);
 
    _create_naviframe(app, win);
-   _create_notify(app, win);
-   _create_popup(app, win);
 
    // set position and size according to parameters
    if(fullscreen)

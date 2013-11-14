@@ -112,7 +112,7 @@ elm_main(int argc, char *argv[])
             elm_app_data_dir_get(), theme);
 
    app = app_get(theme_file_path, extension_file_path);
-   if (!gui_create(app, fullscreen, geometry))
+   if (!app_gui_create(app, fullscreen, geometry))
      {
         EINA_LOG_DOM_ERR(_elm_skel_log_dom, "unable to create application window");
         app_free(app);

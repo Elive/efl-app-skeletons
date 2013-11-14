@@ -31,23 +31,23 @@ app_init(App *app)
    if (app->init_done)
      return EINA_TRUE;
 
-   app_notify(app, "Application initializing...");
+   app_gui_notify(app, "Application initializing...");
 
    if(!elm_skel_lib_init())
      {
-        app_notify(app, "initialization miserably failed.");
+        app_gui_error(app, "initialization miserably failed.");
         goto shutdown_none;
      }
 
    if (!_module0_init(app))
      {
-        app_notify(app, "unable to init module 0.");
+        app_gui_error(app, "unable to init module 0.");
         goto shutdown_skel_lib;
      }
 
    if (!_module1_init(app))
      {
-        app_notify(app, "unable to init module 1.");
+        app_gui_error(app, "unable to init module 1.");
         goto shutdown_module0;
      }
 

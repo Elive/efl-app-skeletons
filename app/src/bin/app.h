@@ -45,7 +45,6 @@ typedef struct _app {
    struct {
         Evas_Object  *win;
         Evas_Object  *popup;
-        Evas_Object  *notify;
         Evas_Object  *nf;
    } gui;
 } App;
@@ -65,14 +64,19 @@ app_init(App *app);
 void
 app_shutdown(App *app);
 
-/* GUI */
+
+/* APP GUI */
+
 Evas_Object*
-gui_create(App *app, Eina_Bool fullscreen, Eina_Rectangle geometry);
+app_gui_create(App *app, Eina_Bool fullscreen, Eina_Rectangle geometry);
 
 void
-app_notify(App *app, const char *msg);
+app_gui_push_first_frame(App *app);
 
 void
-app_popup(App *app, const char *msg);
+app_gui_notify(App *app, const char *msg);
+
+void
+app_gui_error(App *app, const char *msg);
 
 #endif   /* _ELM_SKEL_APP_H */
