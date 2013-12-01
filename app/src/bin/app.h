@@ -1,5 +1,5 @@
-#ifndef _ELM_SKEL_APP_H
-#define _ELM_SKEL_APP_H
+#ifndef _MY_APP_APP_H
+#define _MY_APP_APP_H
 
 #ifdef HAVE_CONFIG_H
 # include <config.h>
@@ -9,34 +9,34 @@
 
 #define MAX_PATH 64
 
-extern int _elm_skel_log_dom;
+extern int _my_app_log_dom;
 #undef EINA_LOG_DOMAIN_DEFAULT
-#define EINA_LOG_DOMAIN_DEFAULT _elm_skel_log_dom
+#define EINA_LOG_DOMAIN_DEFAULT _my_app_log_dom
 
 #ifdef CRITICAL
 #undef CRITICAL
 #endif
-#define CRITICAL(...) EINA_LOG_DOM_CRIT(_elm_skel_log_dom, __VA_ARGS__)
+#define CRITICAL(...) EINA_LOG_DOM_CRIT(_my_app_log_dom, __VA_ARGS__)
 
 #ifdef ERR
 #undef ERR
 #endif
-#define ERR(...) EINA_LOG_DOM_ERR(_elm_skel_log_dom, __VA_ARGS__)
+#define ERR(...) EINA_LOG_DOM_ERR(_my_app_log_dom, __VA_ARGS__)
 
 #ifdef WRN
 #undef WRN
 #endif
-#define WRN(...) EINA_LOG_DOM_WARN(_elm_skel_log_dom, __VA_ARGS__)
+#define WRN(...) EINA_LOG_DOM_WARN(_my_app_log_dom, __VA_ARGS__)
 
 #ifdef INF
 #undef INF
 #endif
-#define INF(...) EINA_LOG_DOM_INFO(_elm_skel_log_dom, __VA_ARGS__)
+#define INF(...) EINA_LOG_DOM_INFO(_my_app_log_dom, __VA_ARGS__)
 
 #ifdef DBG
 #undef DBG
 #endif
-#define DBG(...) EINA_LOG_DOM_DBG(_elm_skel_log_dom, __VA_ARGS__)
+#define DBG(...) EINA_LOG_DOM_DBG(_my_app_log_dom, __VA_ARGS__)
 
 typedef enum _App_Frames
 {
@@ -92,4 +92,4 @@ app_gui_notify(App *app, const char *msg);
 void
 app_gui_error(App *app, const char *msg);
 
-#endif   /* _ELM_SKEL_APP_H */
+#endif   /* _MY_APP_APP_H */

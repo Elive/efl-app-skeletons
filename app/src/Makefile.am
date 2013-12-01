@@ -15,7 +15,7 @@ check_PROGRAMS =
 TESTS =
 EXTRA_DIST =
 
-ELM_SKEL_INSTALL_DATA_HOOK=
+MY_APP_INSTALL_DATA_HOOK=
 
 AM_CPPFLAGS = -I. \
    -I$(top_srcdir) \
@@ -24,8 +24,8 @@ AM_CPPFLAGS = -I. \
    -DPACKAGE_LIB_DIR=\"$(libdir)\" \
    -DPACKAGE_DATA_DIR=\"$(datadir)/$(PACKAGE)\" \
    @EFL_CFLAGS@ \
-   @ELM_SKEL_CFLAGS@ \
-   @ELM_SKEL_COV_CFLAGS@
+   @MY_APP_CFLAGS@ \
+   @MY_APP_COV_CFLAGS@
 
 include Makefile_lib.am
 include Makefile_bin.am

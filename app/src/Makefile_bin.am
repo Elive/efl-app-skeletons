@@ -1,15 +1,15 @@
 ### Binaries
 
-bin_PROGRAMS += bin/elm_skel
+bin_PROGRAMS += bin/my_app
 
-bin_elm_skel_SOURCES = \
+bin_my_app_SOURCES = \
    bin/main.c \
    bin/app.c \
    bin/gui.c
 
 EXTRA_DIST += bin/app.h
 
-bin_elm_skel_LDADD =  $(top_builddir)/src/lib/libelm_skel.la
-bin_elm_skel_CFLAGS =
-bin_elm_skel_LDFLAGS = @ELM_SKEL_LDFLAGS@ $(LTLIBINTL)
+bin_my_app_LDADD =  $(top_builddir)/src/lib/libmy_app.la
+bin_my_app_CFLAGS =
+bin_my_app_LDFLAGS = @MY_APP_LDFLAGS@ $(LTLIBINTL)
 

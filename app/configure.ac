@@ -4,7 +4,7 @@ dnl Process this file with autoconf to produce a configure script.
 rm -f config.cache
 
 PROJECT_VERSION([0], [0], [1], [dev])
-AC_INIT([elm_skel], [v_ver], [jeremy@asynk.ch])
+AC_INIT([my_app], [v_ver], [jeremy@asynk.ch])
 AC_PREREQ([2.65])
 AC_CONFIG_SRCDIR([configure.ac])
 AC_CONFIG_MACRO_DIR([m4])
@@ -109,21 +109,21 @@ AC_SUBST(pkgconfig_requires_private)
 if test "${want_coverage}" = "yes" ; then
    AC_CHECK_PROG([have_lcov], [lcov], [yes], [no])
    if test "x${have_lcov}" = "xyes" ; then
-      ELM_SKEL_COV_CFLAGS="${ELM_SKEL_COV_CFLAGS} -fprofile-arcs -ftest-coverage"
-      ELM_SKEL_COV_LIBS="${ELM_SKEL_COV_LIBS} -lgcov"
+      MY_APP_COV_CFLAGS="${MY_APP_COV_CFLAGS} -fprofile-arcs -ftest-coverage"
+      MY_APP_COV_LIBS="${MY_APP_COV_LIBS} -lgcov"
       if test "x${prefer_assert}" = "xno"; then
-         ELM_SKEL_COV_CFLAGS="${ELM_SKEL_COV_CFLAGS} -DNDEBUG"
+         MY_APP_COV_CFLAGS="${MY_APP_COV_CFLAGS} -DNDEBUG"
       else
-         ELM_SKEL_COV_CFLAGS="${ELM_SKEL_COV_CFLAGS} -g -O0 -DDEBUG"
+         MY_APP_COV_CFLAGS="${MY_APP_COV_CFLAGS} -g -O0 -DDEBUG"
       fi
    else
       AC_MSG_ERROR([lcov is not found])
    fi
 fi
 
-AC_SUBST(ELM_SKEL_COV_LIBS)
-AC_SUBST(ELM_SKEL_COV_CFLAGS)
-AM_CONDITIONAL([ELM_SKEL_ENABLE_COVERAGE], [test "${want_coverage}" = "yes"])
+AC_SUBST(MY_APP_COV_LIBS)
+AC_SUBST(MY_APP_COV_CFLAGS)
+AM_CONDITIONAL([MY_APP_ENABLE_COVERAGE], [test "${want_coverage}" = "yes"])
 
 ### Checks for libraries
 
@@ -132,29 +132,29 @@ AM_CONDITIONAL([ELM_SKEL_ENABLE_COVERAGE], [test "${want_coverage}" = "yes"])
 if test "${want_tests}" = "yes"; then
    PKG_CHECK_MODULES([CHECK], [check >= 0.9.5])
 fi
-AM_CONDITIONAL([ELM_SKEL_ENABLE_TESTS], [test "${want_tests}" = "yes"])
+AM_CONDITIONAL([MY_APP_ENABLE_TESTS], [test "${want_tests}" = "yes"])
 
 # Checks for library functions.
 
 # Evil library for compilation on Windows
 
-ELM_SKEL_BUILD=""
+MY_APP_BUILD=""
 case "$host_os" in
    mingw*)
       PKG_CHECK_MODULES([EVIL], [evil >= 1.0.0])
       AC_DEFINE([HAVE_EVIL], [1], [Set to 1 if Evil library is installed])
-      requirement_elm_skel="evil ${requirement_elm_skel}"
-      ELM_SKEL_BUILD="-DELM_SKEL_BUILD"
+      requirement_my_app="evil ${requirement_my_app}"
+      MY_APP_BUILD="-DMY_APP_BUILD"
       ;;
 esac
-AC_SUBST(ELM_SKEL_BUILD)
+AC_SUBST(MY_APP_BUILD)
 
 # Dependencies for the library
 
-requirement_elm_skel="elementary >= 1.7.0 evas >= 1.7.0 ecore-file >= 1.7.0 ecore >= 1.7.0 eet >= 1.7.0 eina >= 1.7.0 ${requirement_elm_skel}"
-PKG_CHECK_MODULES([EFL], [ $requirement_elm_skel ])
+requirement_my_app="elementary >= 1.7.0 evas >= 1.7.0 ecore-file >= 1.7.0 ecore >= 1.7.0 eet >= 1.7.0 eina >= 1.7.0 ${requirement_my_app}"
+PKG_CHECK_MODULES([EFL], [ $requirement_my_app ])
 
-AC_SUBST(requirement_elm_skel)
+AC_SUBST(requirement_my_app)
 
 # Checks for library functions.
 
@@ -180,12 +180,12 @@ EFL_ATTRIBUTE_VECTOR
 
 case "$host_os" in
    mingw32ce*)
-      ELM_SKEL_CFLAGS="${ELM_SKEL_CFLAGS} -D_WIN32_WCE=0x0420"
+      MY_APP_CFLAGS="${MY_APP_CFLAGS} -D_WIN32_WCE=0x0420"
       ;;
 esac
 
-EFL_CHECK_COMPILER_FLAGS([ELM_SKEL], [-Wall -Wunused -Wextra -Wpointer-arith -Wno-missing-field-initializers -fvisibility=hidden -fdata-sections -ffunction-sections])
-EFL_CHECK_LINKER_FLAGS([ELM_SKEL], [-fvisibility=hidden -fdata-sections -ffunction-sections -Wl,--gc-sections -fno-strict-aliasing -Wl,--as-needed -Wl,--no-copy-dt-needed-entries])
+EFL_CHECK_COMPILER_FLAGS([MY_APP], [-Wall -Wunused -Wextra -Wpointer-arith -Wno-missing-field-initializers -fvisibility=hidden -fdata-sections -ffunction-sections])
+EFL_CHECK_LINKER_FLAGS([MY_APP], [-fvisibility=hidden -fdata-sections -ffunction-sections -Wl,--gc-sections -fno-strict-aliasing -Wl,--as-needed -Wl,--no-copy-dt-needed-entries])
 
 case "${build_profile}" in
    dev)
@@ -222,12 +222,12 @@ AC_SUBST(lt_enable_auto_import)
 ### Output
 
 AC_OUTPUT([
-   elm_skel.pc
+   my_app.pc
    Makefile
    src/Makefile
    data/Makefile
    data/desktop/Makefile
-   data/desktop/elm_skel.desktop
+   data/desktop/my_app.desktop
    data/themes/Makefile
    data/themes/default/Makefile
 ])

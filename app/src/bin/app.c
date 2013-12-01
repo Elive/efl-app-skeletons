@@ -33,7 +33,7 @@ app_init(App *app)
 
    app_gui_notify(app, "Application initializing...");
 
-   if(!elm_skel_lib_init())
+   if(!my_app_lib_init())
      {
         app_gui_error(app, "initialization miserably failed.");
         goto shutdown_none;
@@ -56,7 +56,7 @@ app_init(App *app)
    return EINA_TRUE;
 
 shutdown_skel_lib:
-   elm_skel_lib_shutdown();
+   my_app_lib_shutdown();
 shutdown_module0:
    _module0_shutdown(app);
 shutdown_none:
@@ -70,7 +70,7 @@ app_shutdown(App *app)
      {
         _module1_shutdown(app);
         _module0_shutdown(app);
-        elm_skel_lib_shutdown();
+        my_app_lib_shutdown();
      }
 
    app->init_done = EINA_FALSE;

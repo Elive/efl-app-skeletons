@@ -6,7 +6,7 @@
 
 #include "app.h"
 
-int _elm_skel_log_dom = -1;
+int _my_app_log_dom = -1;
 
 static const Ecore_Getopt options =
 {
@@ -78,7 +78,7 @@ elm_main(int argc, char *argv[])
    elm_app_compile_bin_dir_set(PACKAGE_BIN_DIR);
    elm_app_compile_lib_dir_set(PACKAGE_LIB_DIR);
    elm_app_compile_data_dir_set(PACKAGE_DATA_DIR);
-   elm_app_info_set(elm_main, "elm_skel", "themes/default.edj");
+   elm_app_info_set(elm_main, "my_app", "themes/default.edj");
 
    args = ecore_getopt_parse(&options, values, argc, argv);
 
@@ -98,10 +98,10 @@ elm_main(int argc, char *argv[])
    if (engine) elm_config_preferred_engine_set(engine);
 
    eina_log_color_disable_set(EINA_FALSE);
-   _elm_skel_log_dom = eina_log_domain_register(PACKAGE_NAME, EINA_COLOR_CYAN);
+   _my_app_log_dom = eina_log_domain_register(PACKAGE_NAME, EINA_COLOR_CYAN);
 
-   EINA_LOG_DOM_INFO(_elm_skel_log_dom, "%s %s:", PACKAGE_NAME, VERSION);
-   EINA_LOG_DOM_DBG(_elm_skel_log_dom, "\n  bin: %s\n  lib: %s\n data: %s",
+   EINA_LOG_DOM_INFO(_my_app_log_dom, "%s %s:", PACKAGE_NAME, VERSION);
+   EINA_LOG_DOM_DBG(_my_app_log_dom, "\n  bin: %s\n  lib: %s\n data: %s",
                 elm_app_bin_dir_get(),
                 elm_app_lib_dir_get(),
                 elm_app_data_dir_get());
@@ -114,7 +114,7 @@ elm_main(int argc, char *argv[])
    app = app_get(theme_file_path, extension_file_path);
    if (!app_gui_create(app, fullscreen, geometry))
      {
-        EINA_LOG_DOM_ERR(_elm_skel_log_dom, "unable to create application window");
+        EINA_LOG_DOM_ERR(_my_app_log_dom, "unable to create application window");
         app_free(app);
         return EXIT_FAILURE;
      }

@@ -1,32 +1,32 @@
 ### Libraries
 
-includesdir = $(includedir)/elm_skel-@VMAJ@
+includesdir = $(includedir)/my_app-@VMAJ@
 includes_HEADERS = \
    lib/Lib.h
 
-lib_libelm_skel_la_SOURCES = \
+lib_libmy_app_la_SOURCES = \
    lib/lib.c
 
 EXTRA_DIST += lib/lib_private.h
 
-lib_LTLIBRARIES += lib/libelm_skel.la
+lib_LTLIBRARIES += lib/libmy_app.la
 
-lib_libelm_skel_la_LIBADD = @EFL_LIBS@ @ELM_SKEL_COV_LIBS@
-lib_libelm_skel_la_CFLAGS =
-lib_libelm_skel_la_LDFLAGS = @ELM_SKEL_LDFLAGS@ @PROJECT_LTLIBRARY_FLAGS@
+lib_libmy_app_la_LIBADD = @EFL_LIBS@ @MY_APP_COV_LIBS@
+lib_libmy_app_la_CFLAGS =
+lib_libmy_app_la_LDFLAGS = @MY_APP_LDFLAGS@ @PROJECT_LTLIBRARY_FLAGS@
 
 ### Unit tests
 
-if ELM_SKEL_ENABLE_TESTS
+if MY_APP_ENABLE_TESTS
 
-TESTS += tests/elm_skel_suite
-check_PROGRAMS += tests/elm_skel_suite
+TESTS += tests/my_app_suite
+check_PROGRAMS += tests/my_app_suite
 
-tests_elm_skel_suite_SOURCES = \
-   tests/elm_skel_suite.c
+tests_my_app_suite_SOURCES = \
+   tests/my_app_suite.c
 
-tests_elm_skel_suite_CFLAGS = @CHECK_CFLAGS@
-tests_elm_skel_suite_LDADD = @CHECK_LIBS@ lib/libelm_skel.la
-tests_elm_skel_suite_DEPENDENCIES = 
+tests_my_app_suite_CFLAGS = @CHECK_CFLAGS@
+tests_my_app_suite_LDADD = @CHECK_LIBS@ lib/libmy_app.la
+tests_my_app_suite_DEPENDENCIES = 
 
 endif

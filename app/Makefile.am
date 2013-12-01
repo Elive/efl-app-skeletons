@@ -35,7 +35,7 @@ EXTRA_DIST = \
    AUTHORS \
    COPYING \
    autogen.sh \
-   elm_skel.pc.in \
+   my_app.pc.in \
    m4/efl_attribute.m4 \
    m4/efl_compiler.m4 \
    m4/efl_path_max.m4 \
@@ -43,12 +43,12 @@ EXTRA_DIST = \
    m4/project_init.m4
 
 pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = elm_skel.pc
+pkgconfig_DATA = my_app.pc
 
 
 # Unit tests
 
-if ELM_SKEL_ENABLE_COVERAGE
+if MY_APP_ENABLE_COVERAGE
 
 lcov-reset:
 	@rm -rf $(top_builddir)/coverage
@@ -65,14 +65,14 @@ lcov-report:
 
 endif
 
-if ELM_SKEL_ENABLE_TESTS
+if MY_APP_ENABLE_TESTS
 
 lcov-check:
-if ELM_SKEL_ENABLE_COVERAGE
+if MY_APP_ENABLE_COVERAGE
 	@$(MAKE) $(AM_MAKEFLAGS) lcov-reset
 endif
 	@$(MAKE) $(AM_MAKEFLAGS) check
-if ELM_SKEL_ENABLE_COVERAGE
+if MY_APP_ENABLE_COVERAGE
 	@$(MAKE) $(AM_MAKEFLAGS) lcov-report
 endif
 

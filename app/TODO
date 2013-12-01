@@ -1,6 +1,6 @@
 - quicklaunch
 - library
-- elm_skel.pc.in
+- my_app.pc.in
 - build profile
 - tests
 - lcov
@@ -14,4 +14,4 @@
 + application icon
 + doxygen
 + gettext
-+ elm_skel.spec.in
++ my_app.spec.in

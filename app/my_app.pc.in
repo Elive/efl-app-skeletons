@@ -4,9 +4,9 @@ libdir=@libdir@
 includedir=@includedir@
 vmaj=@VMAJ@
 
-Name: elm_skel
+Name: my_app
 Description: This is a source tree skeleton for any elementary based project.
-@pkgconfig_requires_private@: @requirement_elm_skel@
+@pkgconfig_requires_private@: @requirement_my_app@
 Version: @VERSION@
-Libs: -L${libdir} -lelm_skel
-Cflags: -I${includedir}/elm_skel_app-@VMAJ@
+Libs: -L${libdir} -lmy_app
+Cflags: -I${includedir}/my_app_app-@VMAJ@
