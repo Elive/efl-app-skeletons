@@ -23,6 +23,7 @@ AM_CPPFLAGS = -I. \
    -DPACKAGE_BIN_DIR=\"$(bindir)\" \
    -DPACKAGE_LIB_DIR=\"$(libdir)\" \
    -DPACKAGE_DATA_DIR=\"$(datadir)/$(PACKAGE)\" \
+   @EFL_CFLAGS@ \
    @ELM_SKEL_CFLAGS@ \
    @ELM_SKEL_COV_CFLAGS@
 

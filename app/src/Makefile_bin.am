@@ -11,5 +11,5 @@ EXTRA_DIST += bin/app.h
 
 bin_elm_skel_LDADD =  $(top_builddir)/src/lib/libelm_skel.la
 bin_elm_skel_CFLAGS =
-bin_elm_skel_LDFLAGS = $(LTLIBINTL)
+bin_elm_skel_LDFLAGS = @ELM_SKEL_LDFLAGS@ $(LTLIBINTL)
 

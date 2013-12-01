@@ -152,7 +152,7 @@ AC_SUBST(ELM_SKEL_BUILD)
 # Dependencies for the library
 
 requirement_elm_skel="elementary >= 1.7.0 evas >= 1.7.0 ecore-file >= 1.7.0 ecore >= 1.7.0 eet >= 1.7.0 eina >= 1.7.0 ${requirement_elm_skel}"
-PKG_CHECK_MODULES([ELM_SKEL], [ $requirement_elm_skel ])
+PKG_CHECK_MODULES([EFL], [ $requirement_elm_skel ])
 
 AC_SUBST(requirement_elm_skel)
 
