@@ -275,7 +275,7 @@ app_gui_create(App *app, Eina_Bool fullscreen, Eina_Rectangle geometry)
    if (!win) return NULL;
    evas_object_smart_callback_add(win, "delete,request", _on_del, NULL);
    elm_win_autodel_set(win, EINA_TRUE);
-   elm_win_icon_name_set(win, "elm-skel");
+   elm_win_icon_name_set(win, "elm_skel");
    /* elm_win_focus_highlight_enabled_set(win, EINA_TRUE); */
    evas_object_show(win);
 

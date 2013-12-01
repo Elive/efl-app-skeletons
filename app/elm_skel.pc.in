@@ -4,7 +4,7 @@ libdir=@libdir@
 includedir=@includedir@
 vmaj=@VMAJ@
 
-Name: elm-skel
+Name: elm_skel
 Description: This is a source tree skeleton for any elementary based project.
 @pkgconfig_requires_private@: @requirement_elm_skel@
 Version: @VERSION@

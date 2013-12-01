@@ -35,7 +35,7 @@ EXTRA_DIST = \
    AUTHORS \
    COPYING \
    autogen.sh \
-   elm-skel.pc.in \
+   elm_skel.pc.in \
    m4/efl_attribute.m4 \
    m4/efl_compiler.m4 \
    m4/efl_path_max.m4 \
@@ -43,7 +43,7 @@ EXTRA_DIST = \
    m4/project_init.m4
 
 pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = elm-skel.pc
+pkgconfig_DATA = elm_skel.pc
 
 
 # Unit tests

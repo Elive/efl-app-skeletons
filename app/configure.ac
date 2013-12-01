@@ -222,12 +222,12 @@ AC_SUBST(lt_enable_auto_import)
 ### Output
 
 AC_OUTPUT([
-   elm-skel.pc
+   elm_skel.pc
    Makefile
    src/Makefile
    data/Makefile
    data/desktop/Makefile
-   data/desktop/elm-skel.desktop
+   data/desktop/elm_skel.desktop
    data/themes/Makefile
    data/themes/default/Makefile
 ])
