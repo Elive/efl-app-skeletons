@@ -1,0 +1,32 @@
+### Libraries
+
+includesdir = $(includedir)/my_lib-@VMAJ@
+includes_HEADERS = \
+   lib/My_Lib.h
+
+lib_libmy_lib_la_SOURCES = \
+   lib/my_lib.c
+
+EXTRA_DIST += lib/my_lib_private.h
+
+lib_LTLIBRARIES += lib/libmy_lib.la
+
+lib_libmy_lib_la_LIBADD = @EFL_LIBS@ @MY_LIB_COV_LIBS@
+lib_libmy_lib_la_CFLAGS =
+lib_libmy_lib_la_LDFLAGS = @MY_LIB_LDFLAGS@ @PROJECT_LTLIBRARY_FLAGS@
+
+### Unit tests
+
+if MY_LIB_ENABLE_TESTS
+
+TESTS += tests/my_lib_suite
+check_PROGRAMS += tests/my_lib_suite
+
+tests_my_lib_suite_SOURCES = \
+   tests/my_lib_suite.c
+
+tests_my_lib_suite_CFLAGS = @CHECK_CFLAGS@
+tests_my_lib_suite_LDADD = @CHECK_LIBS@ lib/libmy_lib.la
+tests_my_lib_suite_DEPENDENCIES = 
+
+endif
