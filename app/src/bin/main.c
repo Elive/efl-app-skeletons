@@ -93,12 +93,12 @@ elm_main(int argc, char *argv[])
    eina_log_level += verbosity;
    if (eina_log_level > EINA_LOG_LEVEL_DBG)
      eina_log_level = EINA_LOG_LEVEL_DBG;
-   eina_log_level_set(eina_log_level);
 
    if (engine) elm_config_preferred_engine_set(engine);
 
    eina_log_color_disable_set(EINA_FALSE);
    _my_app_log_dom = eina_log_domain_register(PACKAGE_NAME, EINA_COLOR_CYAN);
+   eina_log_domain_level_set(PACKAGE_NAME, eina_log_level);
 
    EINA_LOG_DOM_INFO(_my_app_log_dom, "%s %s:", PACKAGE_NAME, VERSION);
    EINA_LOG_DOM_DBG(_my_app_log_dom, "\n  bin: %s\n  lib: %s\n data: %s",
