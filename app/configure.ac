@@ -125,6 +125,11 @@ AC_SUBST(MY_APP_COV_LIBS)
 AC_SUBST(MY_APP_COV_CFLAGS)
 AM_CONDITIONAL([MY_APP_ENABLE_COVERAGE], [test "${want_coverage}" = "yes"])
 
+# lout
+
+AC_CHECK_PROG([have_lout], [lout], [yes], [no])
+AM_CONDITIONAL(MY_APP_HAVE_DOC, test "x${have_lout}" = "xyes")
+
 ### Checks for libraries
 
 # check unit testing library
@@ -230,6 +235,7 @@ AC_OUTPUT([
    data/desktop/my_app.desktop
    data/themes/Makefile
    data/themes/default/Makefile
+   doc/Makefile
 ])
 
 AC_OUTPUT
@@ -263,5 +269,8 @@ echo "Tests...........: make check"
 else
 echo "Tests...........: no"
 fi
+fi
+if test "x${have_lout}" = "xyes"; then
+echo "Tests...........: make doc"
 fi
 echo

@@ -3,7 +3,7 @@ AM_MAKEFLAGS = --no-print-directory
 AM_DISTCHECK_CONFIGURE_FLAGS = \
    --with-tests=regular
 
-SUBDIRS = src data
+SUBDIRS = src data doc
 
 MAINTAINERCLEANFILES = \
    Makefile.in \
@@ -44,6 +44,13 @@ EXTRA_DIST = \
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = my_app.pc
+
+.PHONY: doc
+
+# Documentation
+doc:
+	@echo "entering doc/"
+	$(MAKE) $(AM_MAKEFLAGS) -C doc doc
 
 
 # Unit tests

@@ -1,0 +1,11 @@
+# encoding : iso-8859-1
+
+@SysInclude{ doc }
+
+@Document
+//
+@Text @Begin
+
+@CentredDisplay { Hello World }
+
+@End @Text
